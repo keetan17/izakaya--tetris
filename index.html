@@ -827,7 +827,15 @@ function scheduleDrop(){
 }
 
 function lockPiece(){
+  // ピースを盤面に固定
   getAbsCells(tPiece.t,tPiece.r,tPiece.x,tPiece.y).forEach(({x,y})=>{if(y>=0)tBoard[y][x]=tPiece.t;});
+
+  // DANGERライン（y=2の上端）を越えているか判定
+  // y=0 または y=1 にブロックがあれば即ゲームオーバー
+  if(tBoard[0].some(c=>c!==0)||tBoard[1].some(c=>c!==0)){
+    triggerGameOver();return;
+  }
+
   // ライン消去
   let cleared=0;
   for(let y=H-1;y>=0;){
@@ -838,11 +846,10 @@ function lockPiece(){
     const pts=[0,100,300,500,800];
     tScore+=(pts[Math.min(cleared,4)]||0)*(tLevel+1);
     tLines+=cleared;tLevel=Math.floor(tLines/10);
-    // レベルごとに細かく速度アップ（800ms→最速80ms）
     dropInterval=Math.max(80,800-tLevel*80);
   }
-  // 次ピース
-  if(tBoard[0].some(c=>c!==0)||tBoard[1].some(c=>c!==0)){triggerGameOver();return;}
+
+  // 次ピースを出す
   tPiece=tNext;tNext=newPiece(nextBag());
   if(!tValid(tBoard,tPiece)){triggerGameOver();return;}
   updateTetrisUI();drawTetris();
@@ -908,18 +915,27 @@ function drawTetris(){
   for(let y=0;y<=H;y++){ctx.beginPath();ctx.moveTo(0,y*cs);ctx.lineTo(W*cs,y*cs);ctx.stroke();}
   tBoard.forEach((row,y)=>row.forEach((c,x)=>{if(c)drawCell(ctx,x,y,COLORS[c],cs);}));
 
-  // ゲームオーバーライン（y=2の上端＝スポーン上限）
+  // ゲームオーバーライン（y=2の上端 = ここを越えたらゲームオーバー）
   const goY=2*cs;
   ctx.save();
-  ctx.setLineDash([6,4]);
-  ctx.strokeStyle='rgba(255,46,85,0.85)';ctx.shadowColor='#FF2D55';ctx.shadowBlur=6;
-  ctx.lineWidth=1.5;
+  // ライン本体（太め・赤く光る）
+  ctx.setLineDash([5,3]);
+  ctx.strokeStyle='#FF2D55';
+  ctx.shadowColor='#FF2D55';
+  ctx.shadowBlur=10;
+  ctx.lineWidth=2;
   ctx.beginPath();ctx.moveTo(0,goY);ctx.lineTo(W*cs,goY);ctx.stroke();
-  ctx.setLineDash([]);ctx.shadowBlur=0;
-  // 左端に小さなラベル
-  ctx.fillStyle='rgba(255,46,85,0.8)';ctx.shadowColor='#FF2D55';ctx.shadowBlur=4;
+  ctx.shadowBlur=0;
+  ctx.setLineDash([]);
+  // ライン上部（死亡ゾーン）を薄く赤く塗る
+  ctx.fillStyle='rgba(255,45,85,0.07)';
+  ctx.fillRect(0,0,W*cs,goY);
+  // ラベル
+  ctx.fillStyle='#FF2D55';
+  ctx.shadowColor='#FF2D55';
+  ctx.shadowBlur=6;
   ctx.font='bold 8px sans-serif';
-  ctx.fillText('DANGER',2,goY-2);
+  ctx.fillText('▲ GAME OVER LINE',2,goY-3);
   ctx.restore();
 
   if(tPiece&&!tGameOver){
@@ -961,27 +977,39 @@ function izActiveMino(){
   return null;
 }
 
-// 盤面上のミノ形状が置けるオフセットを列挙
+// 盤面上のミノ形状が置けるオフセットを列挙（ハードドロップ相当）
 function findPlacements(board,t,r){
-  const BH=board.length; // テトリス=20、居酒屋=27
+  const BH=board.length;
   const cells=getLocalCells(t,r);
   const valid=[];
   const seen=new Set();
 
-  for(let ox=0;ox<W;ox++){
-    const absCols=cells.map(c=>c.x+ox);
-    if(absCols.some(x=>x<0||x>=W))continue;
+  // ミノのX範囲を求めてox（X方向オフセット）の有効範囲を算出
+  const minCX=Math.min(...cells.map(c=>c.x));
+  const maxCX=Math.max(...cells.map(c=>c.x));
+  // ox はミノ全体が盤面内に収まる範囲でループ
+  const oxMin = -minCX;
+  const oxMax = W - 1 - maxCX;
 
-    let oy=-5;
+  for(let ox=oxMin; ox<=oxMax; ox++){
+    // 上から落としていく（画面外から開始）
+    let oy = -Math.min(...cells.map(c=>c.y)) - 1;
+
     while(true){
-      const abs=cells.map(c=>({x:c.x+ox,y:c.y+oy}));
-      const next=cells.map(c=>({x:c.x+ox,y:c.y+oy+1}));
-      const canMoveDown=next.every(({x,y})=>{
-        if(y>=BH)return false;
-        if(y<0)return true;
-        return board[y][x]===0;
+      // 現在位置の全セル
+      const abs = cells.map(c=>({x:c.x+ox, y:c.y+oy}));
+      // 1マス下の全セル
+      const nextAbs = cells.map(c=>({x:c.x+ox, y:c.y+oy+1}));
+
+      // 下に進めるか判定
+      const canMoveDown = nextAbs.every(({x,y})=>{
+        if(y >= BH) return false;   // 底に到達
+        if(y < 0)   return true;    // まだ画面外（上）
+        return board[y][x] === 0;   // 空きマスなら通過可
       });
+
       if(!canMoveDown){
+        // 全セルが盤面内に収まっている場合のみ有効
         if(abs.every(({x,y})=>x>=0&&x<W&&y>=0&&y<BH)){
           const key=`${ox},${oy}`;
           if(!seen.has(key)){seen.add(key);valid.push({x:ox,y:oy});}
@@ -989,7 +1017,7 @@ function findPlacements(board,t,r){
         break;
       }
       oy++;
-      if(oy>BH)break;
+      if(oy > BH + 10) break; // 無限ループ防止
     }
   }
   return valid;
@@ -1504,6 +1532,28 @@ function selectAce(mino){
   },2300);
 }
 
+// ミノ形状をSVGで生成（名簿表示用）
+function minoToSVG(type, color, cellSize){
+  const cs = cellSize || 10;
+  const cells = getLocalCells(type, 0);
+  const maxX = Math.max(...cells.map(c=>c.x))+1;
+  const maxY = Math.max(...cells.map(c=>c.y))+1;
+  const w = maxX*cs, h = maxY*cs;
+  const rects = cells.map(({x,y})=>
+    `<rect x="${x*cs+1}" y="${y*cs+1}" width="${cs-2}" height="${cs-2}" rx="1"
+      fill="${color}" filter="url(#glow_${type})"/>`
+  ).join('');
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="display:block;flex-shrink:0;">
+    <defs>
+      <filter id="glow_${type}" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="1.5" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    ${rects}
+  </svg>`;
+}
+
 // 「出禁！！」演出
 function showDekkin(minoName){
   const ov=document.createElement('div');
@@ -1540,7 +1590,7 @@ function showExcludeModal(){
     " onclick="${isLocked?'':'toggleExclude(this)'}">
       <span style="font-size:10px;color:rgba(255,255,255,0.25);font-family:monospace;flex-shrink:0;width:20px;">${num}</span>
       ${e.type==='mino'
-        ? `<span style="width:24px;height:16px;background:${e.color};border-radius:2px;display:inline-block;flex-shrink:0;box-shadow:0 0 6px ${e.color}66;"></span>`
+        ? `<span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:28px;flex-shrink:0;">${minoToSVG(e.key,e.color,10)}</span>`
         : `<span style="font-size:20px;line-height:1;flex-shrink:0;">${e.icon}</span>`
       }
       <span style="flex:1;font-size:13px;font-weight:700;color:${isLocked?'rgba(255,255,255,0.35)':'#fff'};">${e.label}</span>
