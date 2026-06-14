@@ -234,4 +234,1602 @@ input{font-family:inherit;}
 .gameover-title{
   font-size:38px;font-weight:900;
   color:var(--neon-red);
-  text-shadow:0 0 10px var(--neon-red),0 0 30px var(--neon-re
+  text-shadow:0 0 10px var(--neon-red),0 0 30px var(--neon-red),0 0 60px rgba(255,46,85,0.5);
+  letter-spacing:0.05em;
+}
+.shutter{
+  display:flex;gap:3px;margin:4px 0;
+}
+.shutter-bar{
+  width:18px;height:6px;background:var(--neon-red);border-radius:1px;
+  box-shadow:0 0 6px var(--neon-red);
+  animation:pulse 0.6s ease-in-out infinite;
+}
+.shutter-bar:nth-child(2n){animation-delay:0.1s;}
+.shutter-bar:nth-child(3n){animation-delay:0.2s;}
+
+/* ─── IZAKAYA SCREEN ─── */
+#screen-izakaya{
+  background:
+    radial-gradient(ellipse at 10% 0%,rgba(213,0,249,0.07),transparent 40%),
+    radial-gradient(ellipse at 90% 20%,rgba(0,245,255,0.05),transparent 40%),
+    linear-gradient(180deg,#06001A 0%,#050010 100%);
+  overflow:hidden;
+}
+
+/* 居酒屋ヘッダー */
+.iz-header{
+  height:44px;padding:0 8px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(213,0,249,0.25);flex-shrink:0;
+  background:rgba(5,0,20,0.92);position:relative;
+}
+.iz-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--neon-purple),var(--neon-pink),transparent);}
+.iz-title{font-size:13px;font-weight:900;letter-spacing:0.06em;color:var(--neon-pink);text-shadow:0 0 8px var(--neon-pink),0 0 20px var(--neon-purple);}
+
+/* ストック表示 */
+.stock-wrap{display:flex;align-items:center;gap:4px;}
+.stock-label{font-size:9px;font-weight:700;color:var(--neon-cyan);text-shadow:0 0 6px var(--neon-cyan);letter-spacing:0.1em;}
+.stock-num{font-size:18px;font-weight:900;color:#fff;min-width:22px;text-align:center;}
+.stock-dots{display:flex;gap:3px;max-width:72px;overflow:hidden;}
+.stock-dot{
+  width:10px;height:10px;border-radius:50%;flex-shrink:0;
+  background:radial-gradient(circle at 35% 35%,var(--neon-cyan),#006080);
+  box-shadow:0 0 4px var(--neon-cyan);
+}
+
+/* 居酒屋ボード */
+#izakaya-canvas{
+  border:1px solid rgba(213,0,249,0.5);border-radius:6px;
+  background:#010008;display:block;
+  box-shadow:0 0 20px rgba(213,0,249,0.15),inset 0 0 20px rgba(0,0,0,0.6);
+}
+
+/* 右パネル共通 */
+.iz-panel{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;}
+
+/* デッキ情報 */
+.deck-info{padding:5px 8px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.deck-rem{font-size:16px;font-weight:900;color:var(--neon-yellow);text-shadow:0 0 8px var(--neon-yellow);}
+.deck-sub{font-size:9px;color:rgba(255,255,255,0.4);}
+
+/* カード表示（サイドパネル） */
+#card-display{
+  display:none;border:2px solid rgba(255,110,199,0.5);border-radius:8px;
+  padding:6px;text-align:center;flex-shrink:0;
+  background:rgba(255,110,199,0.06);
+}
+#card-icon{font-size:20px;line-height:1.2;}
+#card-text{font-weight:700;font-size:9px;color:rgba(255,255,255,0.9);line-height:1.4;margin-top:2px;}
+
+/* タイマー / 配置ヒント */
+#placing-hint{
+  display:none;border:2px solid rgba(255,230,0,0.4);border-radius:8px;
+  padding:5px;text-align:center;flex-shrink:0;
+  background:rgba(255,230,0,0.05);
+}
+#timer-display{font-size:32px;font-weight:900;color:var(--neon-yellow);text-shadow:0 0 12px var(--neon-yellow);line-height:1;}
+.timer-sub{font-size:8px;color:rgba(255,230,0,0.6);margin:2px 0 4px;}
+.btn-rotate{
+  width:100%;padding:5px;border-radius:6px;font-size:11px;font-weight:700;
+  border:1px solid rgba(255,230,0,0.4);background:rgba(255,230,0,0.08);
+  color:var(--neon-yellow);
+}
+.btn-rotate:active{box-shadow:0 0 10px var(--neon-yellow);}
+
+/* 履歴 */
+.history-wrap{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+.history-label{font-size:8px;font-weight:700;letter-spacing:0.1em;color:var(--neon-purple);text-shadow:0 0 6px var(--neon-purple);margin-bottom:4px;flex-shrink:0;}
+#history-log{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px;}
+
+/* 統計ミニ */
+.stats-mini{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;flex-shrink:0;}
+.stat-cell{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:5px;padding:3px;text-align:center;}
+.stat-val{font-weight:900;font-size:13px;}
+.stat-lbl{color:rgba(255,255,255,0.35);font-size:7px;letter-spacing:0.05em;}
+
+/* 下部アクションバー */
+.iz-action-bar{
+  flex-shrink:0;padding:5px 6px 6px;
+  border-top:1px solid rgba(255,255,255,0.07);
+  display:flex;flex-direction:column;gap:5px;
+  background:rgba(5,0,20,0.95);
+  position:relative;
+}
+.iz-action-bar::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--neon-pink),var(--neon-purple),transparent);}
+
+/* 食った/飲んだボタン */
+.btn-food{
+  flex:1;padding:11px 4px;border-radius:10px;border:2px solid var(--neon-orange);
+  background:rgba(255,109,0,0.12);color:var(--neon-orange);font-size:14px;font-weight:900;
+  text-shadow:0 0 8px var(--neon-orange);
+}
+.btn-food:active{box-shadow:0 0 16px var(--neon-orange),inset 0 0 8px rgba(255,109,0,0.2);}
+.btn-drink{
+  flex:1;padding:11px 4px;border-radius:10px;border:2px solid var(--neon-cyan);
+  background:rgba(0,245,255,0.08);color:var(--neon-cyan);font-size:14px;font-weight:900;
+  text-shadow:0 0 8px var(--neon-cyan);
+}
+.btn-drink:active{box-shadow:0 0 16px var(--neon-cyan),inset 0 0 8px rgba(0,245,255,0.15);}
+
+/* カードを引くボタン */
+#btn-draw{
+  flex:1;padding:11px 6px;border-radius:10px;
+  border:2px solid var(--neon-pink);background:rgba(255,110,199,0.1);
+  color:var(--neon-pink);font-size:13px;font-weight:900;
+  text-shadow:0 0 8px var(--neon-pink);
+}
+#btn-draw:active{box-shadow:0 0 20px var(--neon-pink),inset 0 0 10px rgba(255,110,199,0.2);}
+#btn-draw:disabled{opacity:0.3;border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.3);text-shadow:none;box-shadow:none;}
+#btn-exclude{
+  flex-shrink:0;padding:11px 9px;border-radius:10px;
+  border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.04);
+  color:rgba(255,255,255,0.55);font-size:11px;
+}
+#btn-exclude:active{border-color:var(--neon-purple);color:var(--neon-purple);box-shadow:0 0 10px var(--neon-purple);}
+#btn-exclude:disabled{opacity:0.3;}
+
+/* ─── RESULT SCREEN ─── */
+#screen-result{
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(255,230,0,0.12),transparent 50%),
+    linear-gradient(180deg,#07000F 0%,#050010 100%);
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+}
+.result-card{
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px;padding:14px;
+}
+
+/* ─── MODAL ─── */
+#modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:100;align-items:flex-end;justify-content:center;padding:12px;}
+#modal-content{
+  background:linear-gradient(180deg,#0D0025,#050010);
+  border:1px solid rgba(213,0,249,0.3);border-radius:18px;overflow:hidden;
+  width:100%;max-width:400px;
+  box-shadow:0 -4px 40px rgba(213,0,249,0.2);
+}
+
+/* ─── TOAST ─── */
+#toast{
+  display:none;position:fixed;top:58px;left:50%;transform:translateX(-50%);
+  z-index:200;padding:10px 20px;border-radius:30px;
+  background:linear-gradient(135deg,rgba(255,46,85,0.9),rgba(213,0,249,0.9));
+  border:1px solid rgba(255,255,255,0.2);
+  color:#fff;font-size:14px;font-weight:700;
+  box-shadow:0 0 20px rgba(255,46,85,0.6);white-space:nowrap;pointer-events:none;
+  backdrop-filter:blur(8px);
+}
+
+/* ─── CARD OVERLAY ─── */
+#card-overlay{display:none;position:fixed;inset:0;z-index:150;background:rgba(0,0,5,0.88);align-items:center;justify-content:center;pointer-events:none;}
+#card-overlay-inner{display:flex;flex-direction:column;align-items:center;gap:14px;padding:28px;}
+#co-label{font-size:11px;font-weight:700;letter-spacing:0.25em;color:rgba(255,255,255,0.5);}
+#co-card{width:168px;height:224px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
+#co-sub{font-size:16px;font-weight:700;color:#fff;text-align:center;max-width:260px;line-height:1.4;}
+
+/* ─── LETS GO OVERLAY ─── */
+#letsgo-overlay{
+  display:none;position:fixed;inset:0;z-index:300;
+  align-items:center;justify-content:center;
+  background:rgba(0,0,0,0);pointer-events:none;
+}
+.letsgo-text{
+  font-size:64px;font-weight:900;letter-spacing:0.05em;
+  color:var(--neon-yellow);
+  text-shadow:0 0 20px var(--neon-yellow),0 0 50px var(--neon-orange),0 0 80px var(--neon-red);
+  animation:letsgoPop 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+/* ─── FLICKER helpers ─── */
+.flicker{animation:neonFlicker 4s infinite;}
+.flicker-pink{animation:neonFlickerPink 3s infinite;}
+@keyframes dekkinPop{0%{transform:scale(0.3) rotate(-12deg);opacity:0;}40%{transform:scale(1.2) rotate(3deg);opacity:1;}65%{transform:scale(0.95) rotate(-1deg);}80%{transform:scale(1.1);opacity:1;}100%{transform:scale(2);opacity:0;}}
+</style>
+</head>
+<body>
+<div id="root">
+
+<!-- ============================================================ -->
+<!-- START SCREEN -->
+<!-- ============================================================ -->
+<div id="screen-start" class="screen active">
+  <!-- 夜の街背景 -->
+  <div class="night-city">
+    <!-- ネオン看板列 -->
+    <div class="signs-row">
+
+      <!-- あけみ（ピンク） -->
+      <div class="sign" style="color:var(--neon-pink);">
+        <div class="sign-pole" style="height:55px;"></div>
+        <div class="sign-box flicker-pink" style="font-size:12px;writing-mode:vertical-rl;letter-spacing:0.15em;padding:8px 5px;">あけみ</div>
+        <div class="sign-reflect" style="color:var(--neon-pink);">あけみ</div>
+      </div>
+
+      <!-- ミルキーウェイ（シアン） -->
+      <div class="sign" style="color:var(--neon-cyan);">
+        <div class="sign-pole" style="height:35px;"></div>
+        <div class="sign-box" style="font-size:9px;line-height:1.5;animation:signGlow 2s ease-in-out infinite;">ミルキー<br>ウェイ</div>
+        <div class="sign-reflect" style="color:var(--neon-cyan);">ミルキーウェイ</div>
+      </div>
+
+      <!-- 酒場テトリス（赤） -->
+      <div class="sign" style="color:var(--neon-red);">
+        <div class="sign-pole" style="height:45px;"></div>
+        <div class="sign-box" style="font-size:9px;line-height:1.6;animation:signGlow 3.2s ease-in-out infinite 0.5s;">酒場<br>テトリス</div>
+        <div class="sign-reflect" style="color:var(--neon-red);">酒場テトリス</div>
+      </div>
+
+      <!-- 一杯どう？（パープル） -->
+      <div class="sign" style="color:var(--neon-purple);">
+        <div class="sign-pole" style="height:65px;"></div>
+        <div class="sign-box" style="font-size:9px;writing-mode:vertical-rl;letter-spacing:0.12em;padding:8px 5px;animation:signGlow 2.8s ease-in-out infinite 1s;">一杯どう？</div>
+        <div class="sign-reflect" style="color:var(--neon-purple);">一杯どう？</div>
+      </div>
+
+    </div>
+
+    <!-- 霧・グロー -->
+    <div class="fog"></div>
+
+    <!-- 路面のネオン反射 -->
+    <div style="position:absolute;bottom:0;left:0;right:0;height:35%;background:linear-gradient(180deg,transparent,rgba(213,0,249,0.04) 30%,rgba(0,0,0,0.7));"></div>
+  </div>
+
+  <!-- メインコンテンツ -->
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:2rem 1.5rem;gap:0;">
+
+    <!-- サブタイトル -->
+    <div style="font-size:10px;letter-spacing:0.4em;color:rgba(255,110,199,0.6);margin-bottom:10px;text-shadow:0 0 8px var(--neon-pink);">IZAKAYA GAME CENTER</div>
+
+    <!-- ネオン管タイトル -->
+    <h1 class="neon-flicker" style="font-size:clamp(44px,12vw,68px);font-weight:900;line-height:1.0;margin:0 0 6px;text-align:center;letter-spacing:0.04em;">居酒屋<br>テトリス</h1>
+
+    <!-- キャッチコピー -->
+    <p style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.5);margin:0 0 36px;letter-spacing:0.1em;">食って、飲んで、ミノを消せ。</p>
+
+    <!-- ボタン群 -->
+    <div style="display:flex;flex-direction:column;gap:12px;width:100%;max-width:300px;">
+
+      <!-- ゲームスタートボタン（提灯ネオン風） -->
+      <button onclick="showLetsGo()" style="
+        position:relative;overflow:hidden;
+        padding:18px;border-radius:8px;font-size:20px;font-weight:900;letter-spacing:0.08em;
+        border:3px solid var(--neon-red);
+        background:rgba(255,46,85,0.1);
+        color:var(--neon-red);
+        text-shadow:0 0 10px var(--neon-red),0 0 25px var(--neon-red);
+        box-shadow:0 0 15px rgba(255,46,85,0.3),inset 0 0 20px rgba(255,46,85,0.05);
+      " class="btn-neon">
+        <span style="position:relative;z-index:1;">🏮 ゲームを始める</span>
+      </button>
+
+      <!-- 続きから -->
+      <button id="btn-continue" onclick="loadSave()" style="
+        display:none;padding:16px;border-radius:8px;font-size:16px;font-weight:900;letter-spacing:0.06em;
+        border:2px solid var(--neon-yellow);background:rgba(255,230,0,0.08);
+        color:var(--neon-yellow);text-shadow:0 0 8px var(--neon-yellow);
+      " class="btn-neon">⚡ 前回の続きから</button>
+
+      <!-- ルール -->
+      <button onclick="showRules()" style="
+        padding:13px;border-radius:8px;font-size:14px;font-weight:700;letter-spacing:0.06em;
+        border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.04);
+        color:rgba(255,255,255,0.55);
+      ">ルールを見る</button>
+    </div>
+  </div>
+</div>
+
+<!-- レッツゲリィオーバーレイ -->
+<div id="letsgo-overlay">
+  <div class="letsgo-text" id="letsgo-text">レッツゲリィ！</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TETRIS SCREEN -->
+<!-- ============================================================ -->
+<div id="screen-tetris" class="screen">
+
+  <!-- ヘッダー -->
+  <div class="t-header">
+    <div style="font-size:13px;font-weight:900;letter-spacing:0.06em;" class="t-neon-red">🎰 酒場テトリス</div>
+    <div style="display:flex;gap:6px;">
+      <div class="score-tag"><div class="val" id="t-score">0</div><div class="lbl">おあいそ</div></div>
+      <div class="score-tag"><div class="val" id="t-lines">0</div><div class="lbl">ライン</div></div>
+      <div class="score-tag" style="border-color:rgba(213,0,249,0.4);background:rgba(213,0,249,0.08);">
+        <div class="val" id="t-level" style="color:var(--neon-purple);text-shadow:0 0 8px var(--neon-purple);">0</div>
+        <div class="lbl">酔いLv</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ゲームエリア -->
+  <div style="flex:1;display:flex;align-items:flex-start;justify-content:center;gap:8px;padding:6px 8px 4px;min-height:0;overflow:hidden;">
+    <canvas id="tetris-canvas" width="200" height="400"></canvas>
+    <div style="display:flex;flex-direction:column;gap:7px;align-items:center;flex-shrink:0;">
+      <div>
+        <div class="next-label">次の一杯</div>
+        <canvas id="next-canvas" width="72" height="72"></canvas>
+      </div>
+      <div style="font-size:8px;color:rgba(255,255,255,0.2);text-align:center;line-height:1.8;margin-top:4px;">
+        ← → 移動<br>↑ 回転<br>↓ 落下<br>Space HD
+      </div>
+    </div>
+  </div>
+
+  <!-- タッチコントロール -->
+  <div style="flex-shrink:0;padding:4px 8px 10px;display:flex;flex-direction:column;gap:6px;">
+    <div style="display:flex;gap:6px;justify-content:center;">
+      <button onclick="onRotate()" class="ctrl-btn ctrl-btn-rotate" style="width:68px;height:44px;">↺</button>
+      <button onclick="onHardDrop()" class="ctrl-btn ctrl-btn-drop" style="width:120px;height:44px;">⬇⬇ HARD DROP</button>
+    </div>
+    <div style="display:flex;gap:6px;justify-content:center;">
+      <button onclick="onLeft()" class="ctrl-btn" style="width:90px;height:54px;">◀</button>
+      <button onclick="onSoftDrop()" class="ctrl-btn" style="width:90px;height:54px;">▼</button>
+      <button onclick="onRight()" class="ctrl-btn" style="width:90px;height:54px;">▶</button>
+    </div>
+  </div>
+
+  <!-- ゲームオーバー（閉店ガラガラ） -->
+  <div id="tetris-gameover" class="gameover-overlay" style="display:none;">
+    <div class="bounce-in" style="text-align:center;">
+      <div class="gameover-title">閉店ガラガラ</div>
+      <div class="shutter">
+        <div class="shutter-bar"></div><div class="shutter-bar"></div><div class="shutter-bar"></div>
+        <div class="shutter-bar"></div><div class="shutter-bar"></div><div class="shutter-bar"></div>
+        <div class="shutter-bar"></div><div class="shutter-bar"></div>
+      </div>
+      <div id="go-score" style="color:rgba(255,255,255,0.6);font-size:14px;margin-top:6px;"></div>
+      <div style="color:var(--neon-cyan);font-size:13px;margin-top:10px;text-shadow:0 0 8px var(--neon-cyan);">居酒屋モードへ移行中…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- IZAKAYA SCREEN -->
+<!-- ============================================================ -->
+<div id="screen-izakaya" class="screen">
+
+  <!-- ヘッダー -->
+  <div class="iz-header">
+    <div class="iz-title">🍺 居酒屋モード</div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <div class="stock-wrap">
+        <span class="stock-label">ST</span>
+        <span id="stock-num" class="stock-num">0</span>
+        <div id="stock-dots" class="stock-dots"></div>
+      </div>
+      <button onclick="showResetModal()" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:transparent;color:rgba(255,255,255,0.4);font-size:12px;">⚙️</button>
+    </div>
+  </div>
+
+  <!-- メインエリア -->
+  <div style="flex:1;display:flex;gap:0;min-height:0;overflow:hidden;">
+
+    <!-- 左：ボード -->
+    <div style="flex-shrink:0;display:flex;align-items:flex-start;padding:4px 2px 4px 5px;">
+      <canvas id="izakaya-canvas" width="300" height="810"></canvas>
+    </div>
+
+    <!-- 右：コントロール -->
+    <div style="flex:1;display:flex;flex-direction:column;gap:5px;padding:4px 5px 4px 4px;min-width:0;overflow:hidden;">
+
+      <!-- デッキ -->
+      <div class="iz-panel deck-info">
+        <span class="deck-sub">🃏 残り</span>
+        <span class="deck-rem"><span id="deck-count">10</span><span style="font-size:10px;color:rgba(255,255,255,0.3);">/10</span></span>
+        <span id="deck-cycle" class="deck-sub"></span>
+      </div>
+
+      <!-- カード -->
+      <div id="card-display">
+        <div id="card-icon"></div>
+        <div id="card-text"></div>
+      </div>
+
+      <!-- 配置ヒント -->
+      <div id="placing-hint">
+        <div id="timer-display"></div>
+        <div class="timer-sub">タップして置く</div>
+        <button onclick="izRotate()" class="btn-rotate">↺ 回転</button>
+      </div>
+
+      <!-- 注文履歴 -->
+      <div class="iz-panel history-wrap" style="padding:5px 7px;">
+        <div class="history-label">📋 注文履歴</div>
+        <div id="history-log">
+          <div style="color:rgba(255,255,255,0.25);font-size:10px;font-style:italic;text-align:center;">まだ何も注文してないよ！</div>
+        </div>
+      </div>
+
+      <!-- 統計 -->
+      <div class="stats-mini">
+        <div class="stat-cell"><div id="st-orders" class="stat-val t-neon-pink">0</div><div class="stat-lbl">注文</div></div>
+        <div class="stat-cell"><div id="st-mino" class="stat-val t-neon-cyan">0</div><div class="stat-lbl">ミノ</div></div>
+        <div class="stat-cell"><div id="st-joker" class="stat-val" style="color:var(--neon-purple);text-shadow:0 0 6px var(--neon-purple);">0</div><div class="stat-lbl">ジョーカー</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 下部アクションバー -->
+  <div class="iz-action-bar">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <button onclick="showFoodModal()" class="btn-food">🍢 食った！</button>
+      <button onclick="showDrinkModal()" class="btn-drink">🍺 飲んだ！</button>
+    </div>
+    <div id="draw-area" style="display:flex;gap:5px;">
+      <button id="btn-draw" onclick="showLetsGoThenDraw([])">🃏 カード引く（-1）</button>
+      <button id="btn-exclude" onclick="showExcludeModal()">📋 名簿</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- RESULT SCREEN -->
+<!-- ============================================================ -->
+<div id="screen-result" class="screen">
+  <div style="padding:32px 20px 14px;text-align:center;">
+    <div style="font-size:56px;margin-bottom:10px;">🏆</div>
+    <h1 style="font-size:24px;font-weight:900;margin:0 0 6px;" class="t-neon-yellow">居酒屋テトリス成功！</h1>
+    <p style="color:rgba(255,255,255,0.4);font-size:13px;margin:0;letter-spacing:0.05em;">今夜も飲み食いお疲れさまでした！</p>
+  </div>
+  <div style="padding:0 14px 28px;max-width:400px;margin:0 auto;display:flex;flex-direction:column;gap:10px;">
+    <div class="result-card">
+      <div id="result-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
+    </div>
+    <div id="result-food" style="display:none;" class="result-card">
+      <div style="font-size:11px;font-weight:700;margin-bottom:5px;color:var(--neon-orange);">🍢 食べたもの</div>
+      <div id="result-food-list" style="color:rgba(255,255,255,0.8);font-size:13px;line-height:1.6;"></div>
+    </div>
+    <div id="result-drink" style="display:none;" class="result-card">
+      <div style="font-size:11px;font-weight:700;margin-bottom:5px;color:var(--neon-cyan);">🍺 飲んだもの</div>
+      <div id="result-drink-list" style="color:rgba(255,255,255,0.8);font-size:13px;line-height:1.6;"></div>
+    </div>
+    <button onclick="fullRestart()" style="
+      padding:18px;border-radius:10px;border:3px solid var(--neon-red);
+      background:rgba(255,46,85,0.1);color:var(--neon-red);font-size:20px;font-weight:900;
+      text-shadow:0 0 10px var(--neon-red);letter-spacing:0.08em;
+      box-shadow:0 0 20px rgba(255,46,85,0.3);
+    " class="btn-neon">🔄 もう一回！</button>
+  </div>
+</div>
+
+<!-- カード大表示オーバーレイ -->
+<div id="card-overlay">
+  <div id="card-overlay-inner">
+    <div id="co-label"></div>
+    <div id="co-card"></div>
+    <div id="co-sub"></div>
+  </div>
+</div>
+
+<!-- モーダルオーバーレイ -->
+<div id="modal-overlay">
+  <div id="modal-content"></div>
+</div>
+
+<!-- トースト通知 -->
+<div id="toast"></div>
+
+<script>
+// ============================================================
+// 定数
+// ============================================================
+const W=10,H=20;
+const MINO_TYPES=['I','O','T','S','Z','J','L'];
+const COLORS={I:'#00BFFF',O:'#FFD700',T:'#9B59B6',S:'#2ECC71',Z:'#E74C3C',J:'#3498DB',L:'#FF8C00'};
+const MINO_LABELS={I:'Iミノ',O:'Oミノ',T:'Tミノ',S:'Sミノ',Z:'Zミノ',J:'Jミノ',L:'Lミノ'};
+const SHAPES={
+  I:[[[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]],[[0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]],[[0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]],[[0,1,0,0],[0,1,0,0],[0,1,0,0],[0,1,0,0]]],
+  O:[[[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]],[[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]],[[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]],[[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]]],
+  T:[[[0,0,0],[1,1,1],[0,1,0]],[[0,1,0],[1,1,0],[0,1,0]],[[0,1,0],[1,1,1],[0,0,0]],[[0,1,0],[0,1,1],[0,1,0]]],
+  S:[[[0,0,0],[0,1,1],[1,1,0]],[[0,1,0],[0,1,1],[0,0,1]],[[0,0,0],[0,1,1],[1,1,0]],[[0,1,0],[0,1,1],[0,0,1]]],
+  Z:[[[0,0,0],[1,1,0],[0,1,1]],[[0,0,1],[0,1,1],[0,1,0]],[[0,0,0],[1,1,0],[0,1,1]],[[0,0,1],[0,1,1],[0,1,0]]],
+  J:[[[0,0,0],[1,1,1],[0,0,1]],[[0,1,0],[0,1,0],[1,1,0]],[[1,0,0],[1,1,1],[0,0,0]],[[0,1,1],[0,1,0],[0,1,0]]],
+  L:[[[0,0,0],[1,1,1],[1,0,0]],[[1,1,0],[0,1,0],[0,1,0]],[[0,0,1],[1,1,1],[0,0,0]],[[0,1,0],[0,1,0],[0,1,1]]]
+};
+const ALL_CARDS=['I','O','T','S','Z','J','L','ACE','ACE','JOKER'];
+
+// ============================================================
+// ユーティリティ
+// ============================================================
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function getShape(t,r){return SHAPES[t][((r%4)+4)%4];}
+function getLocalCells(t,r){
+  const sh=getShape(t,r),cells=[];
+  for(let y=0;y<sh.length;y++)for(let x=0;x<sh[y].length;x++)if(sh[y][x])cells.push({x,y});
+  return cells;
+}
+function getAbsCells(t,r,ox,oy){return getLocalCells(t,r).map(c=>({x:c.x+ox,y:c.y+oy}));}
+
+function createBoard(){return Array.from({length:H},()=>Array(W).fill(0));}
+
+// ============================================================
+// localStorage
+// ============================================================
+const SAVE_KEY='izakaya-tetris-v1';
+function saveGame(){
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify({board:izBoard,stock:izStock,history:izHistory,deck:izDeck,stats:izStats}));}catch(e){}
+}
+function loadGame(){try{const d=localStorage.getItem(SAVE_KEY);return d?JSON.parse(d):null;}catch(e){return null;}}
+function clearGame(){try{localStorage.removeItem(SAVE_KEY);}catch(e){}}
+
+// ============================================================
+// 画面切替
+// ============================================================
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+}
+
+// 起動時: セーブデータ確認
+(function(){
+  const d=loadGame();
+  if(d&&d.board)document.getElementById('btn-continue').style.display='block';
+})();
+
+// ============================================================
+// TETRIS ロジック
+// ============================================================
+let tBoard,tPiece,tNext,tScore,tLines,tLevel,tGameOver,tPaused;
+let dropTimer=null,dropInterval=800,bag=[];
+
+function nextBag(){if(!bag.length)bag=shuffle([...MINO_TYPES]);return bag.pop();}
+function newPiece(t){return{t,x:3,y:0,r:0};}
+
+function tValid(board,piece){
+  return getAbsCells(piece.t,piece.r,piece.x,piece.y).every(({x,y})=>x>=0&&x<W&&y<H&&(y<0||board[y][x]===0));
+}
+
+function tGhost(){
+  let g={...tPiece};
+  while(tValid(tBoard,{...g,y:g.y+1}))g.y++;
+  return g;
+}
+
+function resizeTetrisCanvas(){
+  // ヘッダー44px + コントロール下部(44+6+54+6+8+8)=126px + 余白 = 約180px
+  const headerH=44, ctrlH=130, padV=14;
+  const availH=window.innerHeight - headerH - ctrlH - padV;
+  const availW=window.innerWidth - 8 - 8 - 90; // 両サイドpad + NEXTパネル幅
+  // W=10, H=20 の比率に合わせてセルサイズを決定
+  const csByH=Math.floor(availH/H);
+  const csByW=Math.floor(availW/W);
+  const cs=Math.max(16, Math.min(csByH, csByW, 28));
+  const cv=document.getElementById('tetris-canvas');
+  cv.width=W*cs; cv.height=H*cs;
+  // NEXTキャンバス
+  const ncs=Math.floor(cs*0.78);
+  const nc=document.getElementById('next-canvas');
+  nc.width=ncs*4; nc.height=ncs*4;
+  return cs;
+}
+
+function showLetsGo(){
+  const ov=document.getElementById('letsgo-overlay');
+  const txt=document.getElementById('letsgo-text');
+  ov.style.display='flex';
+  txt.style.animation='none';
+  void txt.offsetWidth; // reflow
+  txt.style.animation='letsgoPop 0.9s cubic-bezier(0.22,1,0.36,1) forwards';
+  setTimeout(()=>{ov.style.display='none';startTetris();},800);
+}
+
+function startTetris(){
+  showScreen('tetris');
+  resizeTetrisCanvas();
+  tBoard=createBoard();tScore=0;tLines=0;tLevel=0;tGameOver=false;tPaused=false;bag=[];
+  tPiece=newPiece(nextBag());tNext=newPiece(nextBag());
+  dropInterval=850;
+  document.getElementById('tetris-gameover').style.display='none';
+  updateTetrisUI();drawTetris();
+  scheduleDrop();
+}
+
+function scheduleDrop(){
+  clearTimeout(dropTimer);
+  if(tGameOver||tPaused)return;
+  dropTimer=setTimeout(()=>{movePieceDown();scheduleDrop();},dropInterval);
+}
+
+function lockPiece(){
+  // ピースを盤面に固定
+  getAbsCells(tPiece.t,tPiece.r,tPiece.x,tPiece.y).forEach(({x,y})=>{if(y>=0)tBoard[y][x]=tPiece.t;});
+
+  // DANGERライン（y=2の上端）を越えているか判定
+  // y=0 または y=1 にブロックがあれば即ゲームオーバー
+  if(tBoard[0].some(c=>c!==0)||tBoard[1].some(c=>c!==0)){
+    triggerGameOver();return;
+  }
+
+  // ライン消去
+  let cleared=0;
+  for(let y=H-1;y>=0;){
+    if(tBoard[y].every(c=>c!==0)){tBoard.splice(y,1);tBoard.unshift(Array(W).fill(0));cleared++;}
+    else y--;
+  }
+  if(cleared){
+    const pts=[0,100,300,500,800];
+    tScore+=(pts[Math.min(cleared,4)]||0)*(tLevel+1);
+    tLines+=cleared;tLevel=Math.floor(tLines/10);
+    dropInterval=Math.max(80,800-tLevel*80);
+  }
+
+  // 次ピースを出す
+  tPiece=tNext;tNext=newPiece(nextBag());
+  if(!tValid(tBoard,tPiece)){triggerGameOver();return;}
+  updateTetrisUI();drawTetris();
+}
+
+function triggerGameOver(){
+  tGameOver=true;clearTimeout(dropTimer);
+  const go=document.getElementById('tetris-gameover');
+  go.style.display='flex';
+  document.getElementById('go-score').textContent='スコア: '+tScore.toLocaleString();
+  setTimeout(()=>{go.style.display='none';startIzakaya(tBoard.map(r=>[...r]));},2000);
+}
+
+function movePieceDown(){
+  if(tGameOver||tPaused)return;
+  const moved={...tPiece,y:tPiece.y+1};
+  if(tValid(tBoard,moved)){tPiece=moved;drawTetris();}else lockPiece();
+}
+function onLeft(){if(!tGameOver&&!tPaused){const m={...tPiece,x:tPiece.x-1};if(tValid(tBoard,m)){tPiece=m;drawTetris();}}}
+function onRight(){if(!tGameOver&&!tPaused){const m={...tPiece,x:tPiece.x+1};if(tValid(tBoard,m)){tPiece=m;drawTetris();}}}
+function onSoftDrop(){if(!tGameOver&&!tPaused){const m={...tPiece,y:tPiece.y+1};if(tValid(tBoard,m)){tPiece=m;tScore++;drawTetris();}else lockPiece();}}
+function onHardDrop(){
+  if(tGameOver||tPaused)return;
+  clearTimeout(dropTimer);
+  const g=tGhost();tPiece=g;lockPiece();scheduleDrop();
+}
+function onRotate(){
+  if(tGameOver||tPaused)return;
+  const nr=(tPiece.r+1)%4;
+  const kicks=[[0,0],[-1,0],[1,0],[0,-1],[-1,-1],[1,-1],[2,0],[-2,0]];
+  for(const [dx,dy] of kicks){
+    const m={...tPiece,r:nr,x:tPiece.x+dx,y:tPiece.y+dy};
+    if(tValid(tBoard,m)){tPiece=m;drawTetris();return;}
+  }
+}
+function updateTetrisUI(){
+  document.getElementById('t-score').textContent=tScore.toLocaleString();
+  document.getElementById('t-lines').textContent=tLines;
+  document.getElementById('t-level').textContent=tLevel;
+}
+
+// テトリス描画
+function drawCell(ctx,x,y,color,cs){
+  const px=x*cs+1,py=y*cs+1,pw=cs-2,ph=cs-2;
+  // ネオン発光：外側グロー
+  ctx.shadowColor=color;ctx.shadowBlur=cs*0.8;
+  ctx.fillStyle=color;ctx.fillRect(px,py,pw,ph);
+  ctx.shadowBlur=0;
+  // 内側ハイライト（上・左）
+  ctx.fillStyle='rgba(255,255,255,0.42)';ctx.fillRect(px,py,pw,3);ctx.fillRect(px,py,3,ph);
+  // 内側シャドウ（下・右）
+  ctx.fillStyle='rgba(0,0,0,0.35)';ctx.fillRect(px+pw-3,py,3,ph);ctx.fillRect(px,py+ph-3,pw,3);
+  // 中央に薄いグラデ
+  ctx.fillStyle='rgba(255,255,255,0.06)';ctx.fillRect(px+3,py+3,pw-6,ph-6);
+}
+function drawTetris(){
+  const cv=document.getElementById('tetris-canvas'),ctx=cv.getContext('2d');
+  const cs=cv.width/W;  // 動的セルサイズ
+  ctx.fillStyle='#010008';ctx.fillRect(0,0,cv.width,cv.height);
+  // ネオングリッド
+  ctx.strokeStyle='rgba(255,46,85,0.08)';ctx.lineWidth=0.5;
+  for(let x=0;x<=W;x++){ctx.beginPath();ctx.moveTo(x*cs,0);ctx.lineTo(x*cs,H*cs);ctx.stroke();}
+  for(let y=0;y<=H;y++){ctx.beginPath();ctx.moveTo(0,y*cs);ctx.lineTo(W*cs,y*cs);ctx.stroke();}
+  tBoard.forEach((row,y)=>row.forEach((c,x)=>{if(c)drawCell(ctx,x,y,COLORS[c],cs);}));
+
+  // ゲームオーバーライン（y=2の上端 = ここを越えたらゲームオーバー）
+  const goY=2*cs;
+  ctx.save();
+  // ライン本体（太め・赤く光る）
+  ctx.setLineDash([5,3]);
+  ctx.strokeStyle='#FF2D55';
+  ctx.shadowColor='#FF2D55';
+  ctx.shadowBlur=10;
+  ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(0,goY);ctx.lineTo(W*cs,goY);ctx.stroke();
+  ctx.shadowBlur=0;
+  ctx.setLineDash([]);
+  // ライン上部（死亡ゾーン）を薄く赤く塗る
+  ctx.fillStyle='rgba(255,45,85,0.07)';
+  ctx.fillRect(0,0,W*cs,goY);
+  // ラベル
+  ctx.fillStyle='#FF2D55';
+  ctx.shadowColor='#FF2D55';
+  ctx.shadowBlur=6;
+  ctx.font='bold 8px sans-serif';
+  ctx.fillText('▲ GAME OVER LINE',2,goY-3);
+  ctx.restore();
+
+  if(tPiece&&!tGameOver){
+    const g=tGhost();
+    getAbsCells(g.t,g.r,g.x,g.y).forEach(({x,y})=>{
+      if(y>=0){ctx.fillStyle='rgba(255,255,255,0.07)';ctx.fillRect(x*cs+1,y*cs+1,cs-2,cs-2);
+      ctx.strokeStyle='rgba(255,255,255,0.18)';ctx.strokeRect(x*cs+1,y*cs+1,cs-2,cs-2);}
+    });
+    getAbsCells(tPiece.t,tPiece.r,tPiece.x,tPiece.y).forEach(({x,y})=>{if(y>=0)drawCell(ctx,x,y,COLORS[tPiece.t],cs);});
+  }
+  const nc=document.getElementById('next-canvas'),nctx=nc.getContext('2d');
+  nctx.fillStyle='rgba(10,4,0,0.85)';nctx.fillRect(0,0,nc.width,nc.height);
+  if(tNext){const ns=Math.floor(nc.width/4);getLocalCells(tNext.t,tNext.r).forEach(({x,y})=>drawCell(nctx,x,y,COLORS[tNext.t],ns));}
+}
+
+// キーボード
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('screen-tetris').classList.contains('active'))return;
+  switch(e.key){
+    case'ArrowLeft':e.preventDefault();onLeft();break;
+    case'ArrowRight':e.preventDefault();onRight();break;
+    case'ArrowDown':e.preventDefault();onSoftDrop();break;
+    case'ArrowUp':e.preventDefault();onRotate();break;
+    case' ':e.preventDefault();onHardDrop();break;
+    case'z':case'Z':onRotate();break;
+  }
+  clearTimeout(dropTimer);scheduleDrop();
+});
+
+// ============================================================
+// IZAKAYA ロジック
+// ============================================================
+let izBoard,izStock,izHistory,izDeck,izStats,izPhase,izCurrentCard,izSelectedMino,izRotation=0;
+let izTimerInterval=null,izTimerSec=0;
+
+function izActiveMino(){
+  if(izSelectedMino)return izSelectedMino;
+  if(izCurrentCard&&izCurrentCard!=='ACE'&&izCurrentCard!=='JOKER')return izCurrentCard;
+  return null;
+}
+
+// 盤面上のミノ形状が置けるオフセットを列挙（ハードドロップ相当）
+function findPlacements(board,t,r){
+  const BH=board.length;
+  const cells=getLocalCells(t,r);
+  const valid=[];
+  const seen=new Set();
+
+  // ミノのX範囲を求めてox（X方向オフセット）の有効範囲を算出
+  const minCX=Math.min(...cells.map(c=>c.x));
+  const maxCX=Math.max(...cells.map(c=>c.x));
+  // ox はミノ全体が盤面内に収まる範囲でループ
+  const oxMin = -minCX;
+  const oxMax = W - 1 - maxCX;
+
+  for(let ox=oxMin; ox<=oxMax; ox++){
+    // 上から落としていく（画面外から開始）
+    let oy = -Math.min(...cells.map(c=>c.y)) - 1;
+
+    while(true){
+      // 現在位置の全セル
+      const abs = cells.map(c=>({x:c.x+ox, y:c.y+oy}));
+      // 1マス下の全セル
+      const nextAbs = cells.map(c=>({x:c.x+ox, y:c.y+oy+1}));
+
+      // 下に進めるか判定
+      const canMoveDown = nextAbs.every(({x,y})=>{
+        if(y >= BH) return false;   // 底に到達
+        if(y < 0)   return true;    // まだ画面外（上）
+        return board[y][x] === 0;   // 空きマスなら通過可
+      });
+
+      if(!canMoveDown){
+        // 全セルが盤面内に収まっている場合のみ有効
+        if(abs.every(({x,y})=>x>=0&&x<W&&y>=0&&y<BH)){
+          const key=`${ox},${oy}`;
+          if(!seen.has(key)){seen.add(key);valid.push({x:ox,y:oy});}
+        }
+        break;
+      }
+      oy++;
+      if(oy > BH + 10) break; // 無限ループ防止
+    }
+  }
+  return valid;
+}
+function checkColumnClear(board){for(let x=0;x<W;x++)if(board.every(row=>row[x]===0))return x;return -1;}
+
+function startIzakaya(board){
+  // 上に7行の空き行を追加（居酒屋モードで積み上がる余裕）
+  const extraRows=7;
+  const extended=[];
+  for(let i=0;i<extraRows;i++) extended.push(Array(W).fill(0));
+  extended.push(...board);
+  // 下からH行だけ使う（合計高さをH+extraRowsに拡張）
+  izBoard=extended;
+  izStock=0;izHistory=[];
+  izDeck={remaining:shuffle([...ALL_CARDS]),drawn:[],cycle:0};
+  izStats={food:0,drink:0,mino:0,joker:0,ace:0,start:Date.now(),end:null,foodItems:[],drinkItems:[]};
+  izPhase='idle';izCurrentCard=null;izSelectedMino=null;izRotation=0;
+  saveGame();showScreen('izakaya');renderIzakaya();
+}
+
+function loadSave(){
+  const d=loadGame();
+  if(!d){startTetris();return;}
+  izBoard=d.board;izStock=d.stock||0;izHistory=d.history||[];
+  izDeck=d.deck||{remaining:shuffle([...ALL_CARDS]),drawn:[],cycle:0};
+  izStats=d.stats||{food:0,drink:0,mino:0,joker:0,ace:0,start:Date.now(),end:null,foodItems:[],drinkItems:[]};
+  izPhase='idle';izCurrentCard=null;izSelectedMino=null;izRotation=0;
+  showScreen('izakaya');renderIzakaya();
+}
+
+function renderIzakaya(){
+  updateStockUI();updateHistoryUI();updateDeckUI();updateDrawButtons();updateStatsUI();drawIzakaya();
+}
+
+function updateStockUI(){
+  document.getElementById('stock-num').textContent=izStock;
+  const dots=document.getElementById('stock-dots');
+  dots.innerHTML='';
+  const n=Math.min(izStock,10); // ヘッダー内なので最大10個まで表示
+  for(let i=0;i<n;i++){
+    const d=document.createElement('div');
+    d.style.cssText='width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#5DADE2,#1A5276);box-shadow:0 1px 2px rgba(0,0,0,0.5);flex-shrink:0;';
+    dots.appendChild(d);
+  }
+  if(izStock>10){
+    const e=document.createElement('div');
+    e.style.cssText='font-size:10px;color:#5DADE2;font-weight:700;';
+    e.textContent='+';dots.appendChild(e);
+  }
+}
+
+function updateHistoryUI(){
+  const log=document.getElementById('history-log');
+  if(!izHistory.length){
+    log.innerHTML='<div style="color:rgba(255,255,255,0.3);font-size:12px;font-style:italic;text-align:center;padding:4px;">まだ何も注文してないよ！</div>';return;
+  }
+  log.innerHTML=[...izHistory].reverse().slice(0,20).map(h=>{
+    const clr=h.type==='food'?'var(--neon-orange)':'var(--neon-cyan)';
+    return `<div style="display:flex;align-items:center;gap:4px;font-size:10px;">
+      <span style="font-size:12px;">${h.type==='food'?'🍢':'🍺'}</span>
+      <span style="color:${clr};flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 0 6px ${clr};">${h.name||'メモなし'}</span>
+    </div>`;
+  }).join('');
+}
+
+function updateDeckUI(){
+  document.getElementById('deck-count').textContent=10;
+  document.getElementById('deck-cycle').textContent=izDeck.cycle>0?`${izDeck.cycle}回抽選`:'';
+}
+
+function updateDrawButtons(){
+  const canDraw=izStock>=1&&izPhase==='idle';
+  const bDraw=document.getElementById('btn-draw');
+  const bEx=document.getElementById('btn-exclude');
+  document.getElementById('draw-area').style.display=izPhase==='idle'?'flex':'none';
+  bDraw.style.opacity=canDraw?1:0.35;bDraw.disabled=!canDraw;
+  bEx.style.opacity=izStock>=2?1:0.35;bEx.disabled=izStock<2;
+}
+
+function updateStatsUI(){
+  document.getElementById('st-orders').textContent=izStats.food+izStats.drink;
+  document.getElementById('st-mino').textContent=izStats.mino;
+  document.getElementById('st-joker').textContent=izStats.joker;
+}
+
+function toggleStats(){ /* 統計はサイドパネルに常時表示 */ }
+
+// 居酒屋ボード描画
+function drawIzakaya(){
+  const cv=document.getElementById('izakaya-canvas');
+  const ctx=cv.getContext('2d');
+  const IZH=izBoard?izBoard.length:27;
+  // 利用可能高さに合わせてセルサイズを計算
+  // ヘッダー44 + 下部バー約115 + 余裕6 = 165px
+  const availH=window.innerHeight-165;
+  // 幅: 画面幅の約55%をボードに使う
+  const availW=Math.floor(window.innerWidth*0.55);
+  const csByH=Math.floor(availH/IZH);
+  const csByW=Math.floor(availW/W);
+  const cs=Math.max(10, Math.min(csByH, csByW, 22));
+  const newW=W*cs, newH=IZH*cs;
+  if(cv.width!==newW||cv.height!==newH){cv.width=newW;cv.height=newH;}
+  ctx.fillStyle='#010008';ctx.fillRect(0,0,cv.width,cv.height);
+  // ネオングリッド（パープル）
+  ctx.strokeStyle='rgba(213,0,249,0.07)';ctx.lineWidth=0.5;
+  for(let x=0;x<=W;x++){ctx.beginPath();ctx.moveTo(x*cs,0);ctx.lineTo(x*cs,IZH*cs);ctx.stroke();}
+  for(let y=0;y<=IZH;y++){ctx.beginPath();ctx.moveTo(0,y*cs);ctx.lineTo(W*cs,y*cs);ctx.stroke();}
+
+  const am=izActiveMino();
+  const placements=(am&&izPhase==='placing')?findPlacements(izBoard,am,izRotation):[];
+
+  // 有効な配置エリアのセルをすべて収集（空マス含む）
+  const hlSet=new Set();
+  placements.forEach(off=>getAbsCells(am,izRotation,off.x,off.y).forEach(({x,y})=>hlSet.add(`${x},${y}`)));
+
+  // 既存ブロックを描画
+  izBoard.forEach((row,y)=>row.forEach((c,x)=>{
+    if(!c)return;
+    drawCell(ctx,x,y,COLORS[c]||'#888',cs);
+  }));
+
+  // 配置可能エリアをオーバーレイ
+  // 各placementをミノ色の半透明で表示（ゴーストピース風）
+  if(placements.length>0 && am){
+    const minoColor=COLORS[am]||'#fff';
+    placements.forEach(off=>{
+      getAbsCells(am,izRotation,off.x,off.y).forEach(({x,y})=>{
+        // ミノ色を半透明で塗る（既存ブロックの上にオーバーレイ）
+        ctx.globalAlpha=0.45;
+        ctx.fillStyle=minoColor;
+        ctx.fillRect(x*cs+1,y*cs+1,cs-2,cs-2);
+        ctx.globalAlpha=1.0;
+        // 枠線で輪郭を強調
+        ctx.strokeStyle=minoColor;
+        ctx.lineWidth=1.5;
+        ctx.strokeRect(x*cs+1,y*cs+1,cs-2,cs-2);
+      });
+    });
+  }
+
+  // 置ける場所が一切ない場合
+  if(izPhase==='placing'&&am&&placements.length===0){
+    ctx.fillStyle='rgba(0,0,0,0.65)';ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.fillStyle='#fff';ctx.font='bold 14px sans-serif';ctx.textAlign='center';
+    ctx.fillText('置ける場所がありません',W*cs/2,IZH*cs/2-12);
+    ctx.fillStyle='rgba(255,255,255,0.55)';ctx.font='12px sans-serif';
+    ctx.fillText('回転して試してください',W*cs/2,IZH*cs/2+10);
+    ctx.textAlign='left';
+  }
+
+  // クリア列ハイライト
+  for(let x=0;x<W;x++){
+    if(izBoard.every(row=>row[x]===0)){
+      ctx.fillStyle='rgba(244,208,63,0.12)';ctx.fillRect(x*cs,0,cs,IZH*cs);
+    }
+  }
+}
+
+// キャンバスタップ（click + touchend 両対応・座標スケーリング修正）
+function handleIzakayaTap(clientX, clientY){
+  if(izPhase!=='placing')return;
+  const am=izActiveMino();if(!am)return;
+  const cv=document.getElementById('izakaya-canvas');
+  const rect=cv.getBoundingClientRect();
+  const scaleX=cv.width/rect.width;
+  const scaleY=cv.height/rect.height;
+  const cs=cv.width/W; // 動的セルサイズ
+  const cx=Math.floor((clientX-rect.left)*scaleX/cs);
+  const cy=Math.floor((clientY-rect.top)*scaleY/cs);
+  const IZH2=izBoard?izBoard.length:20;
+  if(cx<0||cx>=W||cy<0||cy>=IZH2)return;
+
+  const placements=findPlacements(izBoard,am,izRotation);
+
+  // タップ座標のセルがいずれかのplacementのセルに含まれるか
+  let match=placements.find(off=>
+    getAbsCells(am,izRotation,off.x,off.y).some(c=>c.x===cx&&c.y===cy)
+  );
+
+  // セルにヒットしなかった場合、タップした列(cx)を通るplacementを探す
+  if(!match){
+    match=placements.find(off=>
+      getAbsCells(am,izRotation,off.x,off.y).some(c=>c.x===cx)
+    );
+  }
+
+  if(match) doPlace(am,match);
+  else showToast('その場所には置けません',1200);
+}
+(function(){
+  const cv=document.getElementById('izakaya-canvas');
+  let lastTouchTime=0;
+  cv.addEventListener('touchstart',function(e){e.preventDefault();},{passive:false});
+  cv.addEventListener('touchend',function(e){
+    e.preventDefault();
+    const now=Date.now();
+    if(now-lastTouchTime<400)return; // ダブルタップ防止
+    lastTouchTime=now;
+    const t=e.changedTouches[0];
+    handleIzakayaTap(t.clientX,t.clientY);
+  },{passive:false});
+  // touchendの後にclickが来るので、タッチ後400ms以内のclickは無視
+  cv.addEventListener('click',function(e){
+    if(Date.now()-lastTouchTime<400)return;
+    handleIzakayaTap(e.clientX,e.clientY);
+  });
+})();
+
+function doPlace(mino,off){
+  stopIzTimer();
+
+  // ミノを盤面に置く
+  const IZH=izBoard.length;
+  getAbsCells(mino,izRotation,off.x,off.y).forEach(({x,y})=>{
+    if(y>=0&&y<IZH&&x>=0&&x<W) izBoard[y][x]=mino;
+  });
+
+  izStats.mino++;
+  izPhase='idle';izCurrentCard=null;izSelectedMino=null;
+  document.getElementById('placing-hint').style.display='none';
+  document.getElementById('card-display').style.display='none';
+
+  // 横一列すべて埋まっている行を消去
+  const clearedRows=[];
+  for(let y=H-1;y>=0;){
+    if(izBoard[y].every(c=>c!==0)){
+      clearedRows.push(y);
+      izBoard.splice(y,1);
+      izBoard.unshift(Array(W).fill(0));
+      // spliceで行が詰まるのでyはそのまま再チェック
+    } else {
+      y--;
+    }
+  }
+  if(clearedRows.length>0){
+    showToast('🎉 '+clearedRows.length+'ライン消去！',2000);
+  }
+
+  saveGame();
+
+  // クリア判定: 縦一列が完全に空
+  const col=checkColumnClear(izBoard);
+  if(col>=0){doClear();}else{renderIzakaya();}
+}
+
+function doClear(){
+  izStats.end=Date.now();saveGame();
+  showToast('🏆 居酒屋テトリス成功！',3000);
+  setTimeout(showResult,1800);
+}
+
+function izRotate(){
+  const am=izActiveMino();if(!am||izPhase!=='placing')return;
+  izRotation=(izRotation+1)%4;drawIzakaya();
+}
+
+// タイマー
+function startIzTimer(){
+  stopIzTimer();
+  izTimerSec=7;
+  const disp=document.getElementById('timer-display');
+  disp.textContent=izTimerSec;disp.style.color='#F4D03F';
+  izTimerInterval=setInterval(()=>{
+    izTimerSec--;
+    if(izTimerSec<=0){
+      stopIzTimer();
+      disp.textContent='⏰';disp.style.color='#E74C3C';
+      showToast('時間切れ！');
+      izStats.mino++;
+      izPhase='idle';izCurrentCard=null;izSelectedMino=null;
+      document.getElementById('placing-hint').style.display='none';
+      document.getElementById('card-display').style.display='none';
+      saveGame();renderIzakaya();
+    }else{
+      disp.textContent=izTimerSec;
+      if(izTimerSec<=2){disp.style.color='var(--neon-red)';disp.style.textShadow='0 0 12px var(--neon-red),0 0 30px var(--neon-red)';disp.style.animation='timerDanger 0.4s ease-in-out infinite';}
+      else{disp.style.color='var(--neon-yellow)';disp.style.textShadow='0 0 12px var(--neon-yellow)';disp.style.animation='';}
+    }
+  },1000);
+}
+function stopIzTimer(){if(izTimerInterval){clearInterval(izTimerInterval);izTimerInterval=null;}if(window._minoTimerStart){clearTimeout(window._minoTimerStart);window._minoTimerStart=null;}}
+
+// カードを引く（毎ターン全10枚から抽選・除外はそのターン限定）
+function drawCard(excluded){
+  if(!Array.isArray(excluded))excluded=[];
+  // ストック消費: 抽選1 + 除外数
+  const cost=1+excluded.length;
+  if(izStock<cost)return;
+  izStock-=cost;
+  izDeck.cycle++;
+
+  // 全10枚のうち除外カードを除いたプールから抽選
+  const pool=ALL_CARDS.filter(c=>c==='ACE'||c==='JOKER'||!excluded.includes(c));
+  const src=pool.length>0?pool:ALL_CARDS;
+  const idx=Math.floor(Math.random()*src.length);
+  const card=src[idx];
+  izCurrentCard=card;izRotation=0;
+
+  if(card==='JOKER'){
+    izStats.joker++;izPhase='idle';
+    saveGame();updateStockUI();updateDeckUI();updateDrawButtons();updateStatsUI();
+    showCardDisplay('🃏','食べ損・飲み損！',true,2500);
+    setTimeout(()=>showToast('食べ損・飲み損！',2000),300);
+  }else if(card==='ACE'){
+    izStats.ace++;izPhase='ace_select';
+    saveGame();updateStockUI();updateDeckUI();updateDrawButtons();updateStatsUI();
+    showCardDisplay('🂡','ACE — 好きなミノを選んでください',false);
+    showAceModal();
+  }else{
+    izPhase='placing';izSelectedMino=null;
+    saveGame();updateStockUI();updateDeckUI();updateDrawButtons();updateStatsUI();drawIzakaya();
+    // カードオーバーレイを表示（タップで即閉じ可）
+    // オーバーレイが閉じてからplacing-hintを出してタイマー開始
+    showCardDisplay(card,MINO_LABELS[card]+' — 配置場所を選んでください',false,2000);
+    // カードオーバーレイが閉じるまでplacing-hintは非表示
+    document.getElementById('placing-hint').style.display='none';
+    // オーバーレイが消えたらタイマー開始（2000ms表示 + 300ms フェードアウト）
+    window._minoTimerStart=setTimeout(()=>{
+      if(izPhase==='placing'){
+        document.getElementById('placing-hint').style.display='block';
+        startIzTimer();
+      }
+    },2300);
+  }
+}
+
+function showCardDisplay(icon,text,isJoker,autoHideMs){
+  // 小カード表示（盤面上部）
+  const cd=document.getElementById('card-display');
+  cd.style.display='block';
+  cd.style.borderColor=isJoker?'rgba(192,57,43,0.8)':'rgba(107,58,31,0.6)';
+  document.getElementById('card-icon').textContent=icon;
+  document.getElementById('card-text').textContent=text;
+
+  // 大オーバーレイ表示
+  const ov=document.getElementById('card-overlay');
+  const inner=document.getElementById('card-overlay-inner');
+  const coCard=document.getElementById('co-card');
+  const coSub=document.getElementById('co-sub');
+  const coLabel=document.getElementById('co-label');
+
+  coLabel.textContent='CARD DRAW';
+
+  if(isJoker){
+    coCard.style.cssText='width:168px;height:224px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(145deg,#1a0010,#050010);border:3px solid var(--neon-red);box-shadow:0 0 30px var(--neon-red),0 0 60px rgba(255,45,85,0.4);';
+    coCard.innerHTML='<div style="font-size:76px;line-height:1;">🃏</div><div style="color:var(--neon-red);font-size:20px;font-weight:900;letter-spacing:0.15em;text-shadow:0 0 12px var(--neon-red);">JOKER</div>';
+    coSub.innerHTML='<span style="color:var(--neon-red);font-size:22px;font-weight:900;text-shadow:0 0 15px var(--neon-red);">食べ損・飲み損！</span>';
+  } else if(icon==='🂡'){
+    coCard.style.cssText='width:168px;height:224px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(145deg,#1a1400,#050010);border:3px solid var(--neon-yellow);box-shadow:0 0 30px var(--neon-yellow),0 0 60px rgba(255,230,0,0.3);';
+    coCard.innerHTML='<div style="font-size:76px;line-height:1;">🂡</div><div style="color:var(--neon-yellow);font-size:20px;font-weight:900;letter-spacing:0.15em;text-shadow:0 0 12px var(--neon-yellow);">ACE</div>';
+    coSub.innerHTML='<span style="color:var(--neon-yellow);font-size:17px;font-weight:700;text-shadow:0 0 10px var(--neon-yellow);">好きなミノを選んでください</span>';
+  } else {
+    const minoColor=COLORS[icon]||'#fff';
+    coCard.style.cssText='width:168px;height:224px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(145deg,#050018,#010008);border:3px solid '+minoColor+';box-shadow:0 0 30px '+minoColor+'88,0 0 60px '+minoColor+'44;';
+    const cells=getLocalCells(icon,0);
+    const maxX=Math.max(...cells.map(cc=>cc.x))+1;
+    const maxY=Math.max(...cells.map(cc=>cc.y))+1;
+    const cs=26;
+    let cellsHtml='<div style="position:relative;width:'+(maxX*cs)+'px;height:'+(maxY*cs)+'px;">';
+    cells.forEach(({x,y})=>{
+      cellsHtml+='<div style="position:absolute;left:'+(x*cs+1)+'px;top:'+(y*cs+1)+'px;width:'+(cs-2)+'px;height:'+(cs-2)+'px;background:'+minoColor+';border-radius:3px;box-shadow:0 0 8px '+minoColor+',inset 2px 2px 0 rgba(255,255,255,0.4);"></div>';
+    });
+    cellsHtml+='</div>';
+    coCard.innerHTML=cellsHtml+'<div style="color:'+minoColor+';font-size:22px;font-weight:900;letter-spacing:0.1em;text-shadow:0 0 12px '+minoColor+';">'+MINO_LABELS[icon]+'</div>';
+    coSub.innerHTML='<span style="color:rgba(255,255,255,0.8);font-size:14px;">タップして消す場所を選ぶ</span>';
+  }
+
+  ov.style.display='flex';
+  inner.classList.remove('card-fadeout');
+  inner.classList.add('card-pop');
+
+  // 自動非表示
+  const hideAfter=autoHideMs||2000;
+  clearTimeout(window._cardOverlayTimer);
+  window._cardOverlayTimer=setTimeout(()=>{
+    inner.classList.remove('card-pop');
+    inner.classList.add('card-fadeout');
+    setTimeout(()=>{
+      ov.style.display='none';
+      inner.classList.remove('card-fadeout');
+    },300);
+  },hideAfter);
+
+  // タップで即非表示（ジョーカー・ACE以外）
+  if(!isJoker && icon!=='🂡'){
+    ov.style.pointerEvents='auto';
+    ov.onclick=()=>{
+      clearTimeout(window._cardOverlayTimer);
+      clearTimeout(window._minoTimerStart);
+      window._minoTimerStart=null;
+      inner.classList.add('card-fadeout');
+      setTimeout(()=>{
+        ov.style.display='none';
+        inner.classList.remove('card-fadeout');
+        ov.onclick=null;
+        ov.style.pointerEvents='none';
+        // タップで早閉じした場合も即タイマー開始
+        if(izPhase==='placing'){
+          document.getElementById('placing-hint').style.display='block';
+          startIzTimer();
+        }
+      },250);
+    };
+  } else {
+    ov.style.pointerEvents='none';
+    ov.onclick=null;
+  }
+}
+
+// ストック追加
+function addStock(type,name){
+  izStock++;
+  if(type==='food'){izStats.food++;}else{izStats.drink++;}
+  if(name){
+    izHistory.push({type,name,id:Date.now()});
+    if(type==='food')izStats.foodItems.push(name);else izStats.drinkItems.push(name);
+  }
+  if(!izStats.start)izStats.start=Date.now();
+  saveGame();updateStockUI();updateHistoryUI();updateDrawButtons();updateStatsUI();
+  showToast(type==='food'?'🍢 ストック+1！':'🍺 ストック+1！',1500);
+}
+
+// ============================================================
+// モーダル
+// ============================================================
+function showModal(html){
+  const ov=document.getElementById('modal-overlay');
+  document.getElementById('modal-content').innerHTML=html;
+  ov.style.display='flex';
+  // スライドアップ
+  const mc=document.getElementById('modal-content');
+  mc.style.animation='slideUp 0.25s ease-out';
+}
+function hideModal(){
+  document.getElementById('modal-overlay').style.display='none';
+  document.getElementById('modal-content').innerHTML='';
+}
+document.getElementById('modal-overlay').addEventListener('click',function(e){if(e.target===this)hideModal();});
+
+function showFoodModal(){
+  showModal(`<div>
+    <div style="padding:16px 20px;background:linear-gradient(90deg,#922B21,#C0392B);display:flex;align-items:center;gap:12px;">
+      <span style="font-size:30px;">🍢</span>
+      <div><div style="color:#fff;font-weight:700;font-size:17px;">何食べた？</div><div style="color:rgba(255,255,255,0.6);font-size:12px;">ストック +1 獲得！</div></div>
+    </div>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
+      <input id="food-input" type="text" placeholder="唐揚げ、枝豆…" maxlength="30"
+        style="width:100%;padding:13px 16px;border-radius:12px;border:1px solid rgba(107,58,31,0.6);background:rgba(0,0,0,0.55);color:#fff;font-size:15px;outline:none;" />
+      <div style="display:flex;gap:10px;">
+        <button onclick="addStock('food');hideModal();" style="flex:1;padding:13px;border-radius:12px;border:1px solid rgba(107,58,31,0.5);background:transparent;color:rgba(212,165,116,0.8);font-size:14px;">スキップ</button>
+        <button onclick="const v=document.getElementById('food-input').value.trim();addStock('food',v||undefined);hideModal();"
+          style="flex:1;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#C0392B,#E74C3C);color:#fff;font-size:15px;font-weight:700;">追加 +1</button>
+      </div>
+    </div>
+  </div>`);
+  setTimeout(()=>document.getElementById('food-input')?.focus(),150);
+}
+
+function showDrinkModal(){
+  showModal(`<div>
+    <div style="padding:16px 20px;background:linear-gradient(90deg,#1A5276,#2E86AB);display:flex;align-items:center;gap:12px;">
+      <span style="font-size:30px;">🍺</span>
+      <div><div style="color:#fff;font-weight:700;font-size:17px;">何飲んだ？</div><div style="color:rgba(255,255,255,0.6);font-size:12px;">ストック +1 獲得！</div></div>
+    </div>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
+      <input id="drink-input" type="text" placeholder="ハイボール、生ビール…" maxlength="30"
+        style="width:100%;padding:13px 16px;border-radius:12px;border:1px solid rgba(46,134,171,0.6);background:rgba(0,0,0,0.55);color:#fff;font-size:15px;outline:none;" />
+      <div style="display:flex;gap:10px;">
+        <button onclick="addStock('drink');hideModal();" style="flex:1;padding:13px;border-radius:12px;border:1px solid rgba(46,134,171,0.3);background:transparent;color:rgba(212,165,116,0.8);font-size:14px;">スキップ</button>
+        <button onclick="const v=document.getElementById('drink-input').value.trim();addStock('drink',v||undefined);hideModal();"
+          style="flex:1;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#1A5276,#2E86AB);color:#fff;font-size:15px;font-weight:700;">追加 +1</button>
+      </div>
+    </div>
+  </div>`);
+  setTimeout(()=>document.getElementById('drink-input')?.focus(),150);
+}
+
+function showAceModal(){
+  const btns=MINO_TYPES.map(m=>`
+    <button onclick="selectAce('${m}')"
+      style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;
+             border:1px solid ${COLORS[m]}66;background:rgba(0,0,0,0.5);cursor:pointer;width:100%;
+             transition:all 0.15s;"
+      onmouseenter="this.style.background='${COLORS[m]}22';this.style.boxShadow='0 0 12px ${COLORS[m]}66'"
+      onmouseleave="this.style.background='rgba(0,0,0,0.5)';this.style.boxShadow=''">
+      <span style="width:20px;height:13px;background:${COLORS[m]};border-radius:2px;display:inline-block;flex-shrink:0;box-shadow:0 0 6px ${COLORS[m]};"></span>
+      <span style="color:#fff;font-weight:700;font-size:13px;">${MINO_LABELS[m]}</span>
+    </button>`).join('');
+  showModal(`<div>
+    <div style="padding:14px 18px;background:linear-gradient(135deg,rgba(255,230,0,0.15),rgba(213,0,249,0.1));border-bottom:2px solid rgba(255,230,0,0.4);text-align:center;">
+      <div style="font-size:38px;">🂡</div>
+      <div style="font-weight:900;font-size:18px;color:var(--neon-yellow);text-shadow:0 0 12px var(--neon-yellow);letter-spacing:0.08em;">ACE！</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-top:3px;">好きなミノを選んでください</div>
+    </div>
+    <div style="padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:7px;">${btns}</div>
+  </div>`);
+}
+
+function selectAce(mino){
+  hideModal();
+  izSelectedMino=mino;izPhase='placing';izRotation=0;
+  saveGame();renderIzakaya();
+  // カードオーバーレイ表示 → 消えてからタイマー開始
+  showCardDisplay(mino,MINO_LABELS[mino]+' — 配置場所を選んでください',false,2000);
+  document.getElementById('placing-hint').style.display='none';
+  window._minoTimerStart=setTimeout(()=>{
+    if(izPhase==='placing'){
+      document.getElementById('placing-hint').style.display='block';
+      startIzTimer();
+    }
+  },2300);
+}
+
+// ミノ形状をSVGで生成（名簿表示用）
+function minoToSVG(type, color, cellSize){
+  const cs = cellSize || 10;
+  const cells = getLocalCells(type, 0);
+  const maxX = Math.max(...cells.map(c=>c.x))+1;
+  const maxY = Math.max(...cells.map(c=>c.y))+1;
+  const w = maxX*cs, h = maxY*cs;
+  const rects = cells.map(({x,y})=>
+    `<rect x="${x*cs+1}" y="${y*cs+1}" width="${cs-2}" height="${cs-2}" rx="1"
+      fill="${color}" filter="url(#glow_${type})"/>`
+  ).join('');
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="display:block;flex-shrink:0;">
+    <defs>
+      <filter id="glow_${type}" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="1.5" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    ${rects}
+  </svg>`;
+}
+
+// 「出禁！！」演出
+function showDekkin(minoName){
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;pointer-events:none;';
+  ov.innerHTML=`<div id="dekkin-inner" style="
+    font-size:72px;font-weight:900;letter-spacing:0.05em;
+    color:#FF2D55;text-shadow:0 0 20px #FF2D55,0 0 50px #FF2D55,0 0 80px rgba(255,45,85,0.5);
+    animation:dekkinPop 0.8s cubic-bezier(0.22,1,0.36,1) forwards;
+  ">出禁！！</div>`;
+  document.body.appendChild(ov);
+  setTimeout(()=>ov.remove(),800);
+}
+
+// 抽選画面（居酒屋の常連客名簿風）
+function showExcludeModal(){
+  // 全カード一覧（名簿）
+  const allEntries=[
+    ...MINO_TYPES.map(m=>({type:'mino',key:m,label:MINO_LABELS[m],color:COLORS[m],icon:m})),
+    {type:'special',key:'ACE',label:'ACE',color:'#FFD700',icon:'🂡',locked:true},
+    {type:'special',key:'JOKER',label:'JOKER',color:'#FF2D55',icon:'🃏',locked:true},
+    {type:'special',key:'ACE2',label:'ACE',color:'#FFD700',icon:'🂡',locked:true},
+  ];
+
+  const rows=allEntries.map((e,i)=>{
+    const isLocked=e.locked;
+    const num=String(i+1).padStart(2,'0');
+    return `<div id="ex-row-${e.key}${e.key==='ACE'&&i===7?'2':''}" data-key="${e.key==='ACE'&&i===7?'ACE2':e.key}" style="
+      display:flex;align-items:center;gap:10px;
+      padding:9px 12px;
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      cursor:${isLocked?'default':'pointer'};
+      transition:background 0.15s;
+      position:relative;
+    " onclick="${isLocked?'':'toggleExclude(this)'}">
+      <span style="font-size:10px;color:rgba(255,255,255,0.25);font-family:monospace;flex-shrink:0;width:20px;">${num}</span>
+      ${e.type==='mino'
+        ? `<span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:28px;flex-shrink:0;">${minoToSVG(e.key,e.color,10)}</span>`
+        : `<span style="font-size:20px;line-height:1;flex-shrink:0;">${e.icon}</span>`
+      }
+      <span style="flex:1;font-size:13px;font-weight:700;color:${isLocked?'rgba(255,255,255,0.35)':'#fff'};">${e.label}</span>
+      ${isLocked
+        ? `<span style="font-size:9px;color:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.1);border-radius:3px;padding:2px 5px;">除外不可</span>`
+        : `<span class="ex-status" style="font-size:11px;color:rgba(255,255,255,0.25);">出席</span>`
+      }
+    </div>`;
+  }).join('');
+
+  showModal(`<div style="position:relative;overflow:hidden;">
+    <!-- 名簿ヘッダー -->
+    <div style="padding:12px 16px;background:linear-gradient(90deg,rgba(0,0,0,0.6),rgba(255,45,85,0.15));border-bottom:2px solid rgba(255,45,85,0.4);position:relative;">
+      <div style="display:flex;align-items:baseline;gap:10px;">
+        <div style="font-size:16px;font-weight:900;color:var(--neon-pink);text-shadow:0 0 10px var(--neon-pink);">常連客名簿</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:0.1em;">REGULAR MEMBERS</div>
+      </div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:3px;">名前をタップ → 出禁（除外）・ストック1消費</div>
+    </div>
+
+    <!-- 名簿リスト -->
+    <div id="exclude-list" style="max-height:52vh;overflow-y:auto;">${rows}</div>
+
+    <!-- フッター -->
+    <div style="padding:10px 12px;border-top:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.5);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);">
+          消費ストック：<span id="exclude-cost" style="font-size:20px;font-weight:900;color:var(--neon-yellow);text-shadow:0 0 8px var(--neon-yellow);">1</span>
+          <span style="font-size:10px;color:rgba(255,255,255,0.3);"> / 所持${izStock}</span>
+        </div>
+        <div style="font-size:11px;color:rgba(255,45,85,0.7);">出禁：<span id="exclude-ban-count">0</span>名</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="hideModal()" style="flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:transparent;color:rgba(255,255,255,0.5);font-size:14px;">キャンセル</button>
+        <button id="btn-ex-confirm" onclick="confirmExclude()" style="
+          flex:2;padding:12px;border-radius:10px;font-size:15px;font-weight:900;letter-spacing:0.05em;
+          border:2px solid var(--neon-pink);background:rgba(255,46,85,0.12);
+          color:var(--neon-pink);text-shadow:0 0 8px var(--neon-pink);
+        ">🎰 レッツゲリィ！！</button>
+      </div>
+    </div>
+  </div>`);
+}
+
+// 名簿行トグル
+function toggleExclude(row){
+  const key=row.dataset.key;
+  const status=row.querySelector('.ex-status');
+  const isBanned=status.textContent==='出禁';
+  if(!isBanned){
+    // 出禁にする
+    const n=document.querySelectorAll('#exclude-list .ex-status').length-
+            [...document.querySelectorAll('#exclude-list .ex-status')].filter(s=>s.textContent==='出禁').length;
+    // ストックチェック
+    const bannedNow=[...document.querySelectorAll('#exclude-list .ex-status')].filter(s=>s.textContent==='出禁').length;
+    if(izStock<1+bannedNow+1){showToast('ストックが足りません',1200);return;}
+    status.textContent='出禁';
+    status.style.color='var(--neon-red)';
+    status.style.textShadow='0 0 6px var(--neon-red)';
+    row.style.background='rgba(255,45,85,0.1)';
+    row.style.borderLeft='3px solid var(--neon-red)';
+    showDekkin(key);
+  }else{
+    // 解除
+    status.textContent='出席';
+    status.style.color='rgba(255,255,255,0.25)';
+    status.style.textShadow='';
+    row.style.background='';
+    row.style.borderLeft='';
+  }
+  updateExcludeCost();
+}
+
+function updateExcludeCost(){
+  const banned=[...document.querySelectorAll('#exclude-list .ex-status')].filter(s=>s.textContent==='出禁').length;
+  const total=1+banned;
+  document.getElementById('exclude-cost').textContent=total;
+  document.getElementById('exclude-ban-count').textContent=banned;
+  const ok=izStock>=total;
+  const btn=document.getElementById('btn-ex-confirm');
+  if(btn){btn.style.opacity=ok?1:0.35;btn.disabled=!ok;}
+}
+
+function confirmExclude(){
+  const excluded=[...document.querySelectorAll('#exclude-list .ex-status')]
+    .filter(s=>s.textContent==='出禁')
+    .map(s=>s.closest('[data-key]').dataset.key)
+    .filter(k=>k!=='ACE2'); // ACE2はACEとして扱う（ACEが2枚あるので）
+  hideModal();
+  // レッツゲリィ演出してからカードを引く
+  showLetsGoThenDraw(excluded);
+}
+
+function showLetsGoThenDraw(excluded){
+  const ov=document.getElementById('letsgo-overlay');
+  const txt=document.getElementById('letsgo-text');
+  ov.style.display='flex';
+  txt.textContent='レッツゲリィ！！';
+  txt.style.animation='none';
+  void txt.offsetWidth;
+  txt.style.animation='letsgoPop 0.9s cubic-bezier(0.22,1,0.36,1) forwards';
+  setTimeout(()=>{ov.style.display='none';drawCard(excluded);},800);
+}
+
+function showResetModal(){
+  showModal(`<div>
+    <div style="padding:14px 18px;background:linear-gradient(90deg,#6B3A1F,#A0522D);">
+      <div style="color:#fff;font-weight:700;font-size:16px;">リセット</div>
+      <div style="color:rgba(255,255,255,0.6);font-size:12px;">どこからやり直しますか？</div>
+    </div>
+    <div style="padding:12px;display:flex;flex-direction:column;gap:10px;">
+      <button onclick="resetIzakaya()" style="padding:14px 16px;border-radius:12px;border:none;background:linear-gradient(135deg,#3D6B00,#5D9B00);color:#fff;font-size:14px;font-weight:700;text-align:left;cursor:pointer;">
+        居酒屋モードだけリセット<br><span style="font-size:11px;opacity:0.7;font-weight:400;">盤面そのまま、ストック等をリセット</span>
+      </button>
+      <button onclick="clearGame();startTetris();hideModal();" style="padding:14px 16px;border-radius:12px;border:none;background:linear-gradient(135deg,#7D3C00,#C0392B);color:#fff;font-size:14px;font-weight:700;text-align:left;cursor:pointer;">
+        テトリスからやり直す<br><span style="font-size:11px;opacity:0.7;font-weight:400;">全リセットしてテトリス画面へ</span>
+      </button>
+      <button onclick="clearGame();fullRestart();" style="padding:14px 16px;border-radius:12px;border:none;background:linear-gradient(135deg,#922B21,#E74C3C);color:#fff;font-size:14px;font-weight:700;text-align:left;cursor:pointer;">
+        全データ削除<br><span style="font-size:11px;opacity:0.7;font-weight:400;">localStorageも含めてすべて消去</span>
+      </button>
+      <button onclick="hideModal()" style="padding:13px;border-radius:12px;border:1px solid rgba(107,58,31,0.5);background:transparent;color:rgba(212,165,116,0.8);font-size:14px;cursor:pointer;">キャンセル</button>
+    </div>
+  </div>`);
+}
+function resetIzakaya(){
+  hideModal();
+  izStock=0;izHistory=[];
+  izDeck={remaining:shuffle([...ALL_CARDS]),drawn:[],cycle:0};
+  izStats={food:0,drink:0,mino:0,joker:0,ace:0,start:Date.now(),end:null,foodItems:[],drinkItems:[]};
+  izPhase='idle';izCurrentCard=null;izSelectedMino=null;
+  stopIzTimer();
+  document.getElementById('placing-hint').style.display='none';
+  document.getElementById('card-display').style.display='none';
+  saveGame();renderIzakaya();
+}
+
+function showRules(){
+  showModal(`<div>
+    <div style="padding:14px 18px;background:linear-gradient(90deg,rgba(255,46,85,0.3),rgba(213,0,249,0.2));border-bottom:1px solid rgba(255,46,85,0.3);display:flex;justify-content:space-between;align-items:center;">
+      <span style="color:#fff;font-weight:700;font-size:16px;">🍢 ルール説明</span>
+      <button onclick="hideModal()" style="color:rgba(255,255,255,0.7);background:transparent;border:none;font-size:22px;cursor:pointer;">✕</button>
+    </div>
+    <div style="padding:14px 18px;max-height:65vh;overflow-y:auto;display:flex;flex-direction:column;gap:13px;font-size:13px;color:rgba(255,255,255,0.78);">
+      ${[
+        ['① テトリスで盤面を作る','普通のテトリスをプレイ。ゲームオーバー時の盤面が居酒屋モードの舞台になります。'],
+        ['② 食って・飲んでストックを貯める','「食った！」「飲んだ！」ボタンでストック獲得。何を食べたかメモも可能。'],
+        ['③ カードを引いてミノを消す','ストック1消費でカードを引き、出たミノの形にブロックを消す。3秒以内に場所を選ぶ！'],
+        ['エース 🂡','好きなミノを選べる。確実に消したい形を選ぼう！'],
+        ['ジョーカー 🃏','「食べ損・飲み損！」何も消せない…'],
+        ['候補を絞る','追加ストックで特定ミノを除外できる（1ミノ除外＝追加1ストック）。エース・ジョーカーは除外不可。'],
+        ['🏆 クリア条件','縦1列が完全に空になれば勝利！「居酒屋テトリス成功！」'],
+      ].map(([t,b])=>`<div><div style="color:#F4D03F;font-weight:700;margin-bottom:4px;">${t}</div><div>${b}</div></div>`).join('')}
+    </div>
+    <div style="padding:12px 14px;border-top:1px solid rgba(107,58,31,0.3);">
+      <button onclick="hideModal()" style="width:100%;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#922B21,#C0392B);color:#fff;font-size:15px;font-weight:700;cursor:pointer;">閉じる</button>
+    </div>
+  </div>`);
+}
+
+// ============================================================
+// リザルト
+// ============================================================
+function showResult(){
+  showScreen('result');
+  const elapsed=(izStats.end&&izStats.start)?(izStats.end-izStats.start):0;
+  const h=Math.floor(elapsed/3600000),m=Math.floor((elapsed%3600000)/60000);
+  const dur=h>0?`${h}時間${m}分`:`${m}分`;
+  const rows=[
+    ['総注文数',izStats.food+izStats.drink],
+    ['食った回数',`${izStats.food}回 🍢`],
+    ['飲んだ回数',`${izStats.drink}回 🍺`],
+    ['使用ミノ数',`${izStats.mino}個`],
+    ['ジョーカー',`${izStats.joker}回`],
+    ['エース',`${izStats.ace}回`],
+    ['デッキ周回',`${izDeck.cycle}周`],
+    ['所要時間',dur],
+  ];
+  document.getElementById('result-stats').innerHTML=rows.map(([l,v])=>`
+    <div style="background:rgba(0,0,0,0.55);border-radius:10px;padding:11px 13px;">
+      <div style="color:#fff;font-weight:700;font-size:17px;">${v}</div>
+      <div style="color:rgba(212,165,116,0.6);font-size:11px;">${l}</div>
+    </div>`).join('');
+  if(izStats.foodItems.length){
+    document.getElementById('result-food').style.display='block';
+    document.getElementById('result-food-list').textContent=izStats.foodItems.join('、');
+  }
+  if(izStats.drinkItems.length){
+    document.getElementById('result-drink').style.display='block';
+    document.getElementById('result-drink-list').textContent=izStats.drinkItems.join('、');
+  }
+}
+
+function fullRestart(){
+  clearGame();hideModal();
+  ['result-food','result-drink'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('btn-continue').style.display='none';
+  showScreen('start');
+}
+
+// ============================================================
+// トースト
+// ============================================================
+let toastTimer=null;
+function showToast(msg,dur=2000){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.style.display='block';
+  if(toastTimer)clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.style.display='none',dur);
+}
+
+// ============================================================
+// 提灯フリッカー
+// ============================================================
+function flicker(){
+  ['lantern1','lantern2','lantern3'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(el)el.style.opacity=(0.6+Math.random()*0.4).toFixed(2);
+  });
+  setTimeout(flicker,300+Math.random()*800);
+}
+flicker();
+
+// リサイズ・画面回転時に再描画
+window.addEventListener('resize', ()=>{
+  if(document.getElementById('screen-tetris').classList.contains('active')){
+    resizeTetrisCanvas(); drawTetris();
+  } else if(document.getElementById('screen-izakaya').classList.contains('active')){
+    drawIzakaya();
+  }
+});
+</script>
+</body>
+</html>
