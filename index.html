@@ -480,6 +480,73 @@ input{font-family:inherit;}
   width:16px;height:16px;border-radius:50%;border:none;
   background:var(--neon-cyan);box-shadow:0 0 6px var(--neon-cyan);cursor:pointer;
 }
+
+/* ════════════════════════════════════════════════ */
+/* ─── QUALITY PASS（演出・UI・見た目の追加のみ）─── */
+/* ════════════════════════════════════════════════ */
+
+/* ① 画面遷移：フェード＋せり上がり */
+@keyframes screenIn{0%{opacity:0;transform:translateY(10px) scale(0.992);}100%{opacity:1;transform:translateY(0) scale(1);}}
+.screen.active{animation:screenIn 0.34s cubic-bezier(0.22,1,0.36,1);}
+
+/* ⑦ PCホバー演出（タッチ機には影響なし） */
+@media (hover:hover){
+  button:hover{filter:brightness(1.18) saturate(1.1);}
+  .btn-neon:hover{box-shadow:0 0 22px currentColor,inset 0 0 14px rgba(255,255,255,0.09);}
+  .btn-neon:hover::before{left:200%;transition:left 0.6s ease;}
+  .ctrl-btn:hover{background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.25);}
+  .sound-toggle:hover,.bgm-toggle:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.3);}
+  .btn-food:hover{box-shadow:0 0 14px var(--neon-orange);}
+  .btn-drink:hover{box-shadow:0 0 14px var(--neon-cyan);}
+  #btn-draw:hover:not(:disabled){box-shadow:0 0 16px var(--neon-pink);}
+}
+
+/* ⑧ ボタンの押し心地（よりキビキビ＆沈み込み） */
+button{transition:transform 0.08s ease,filter 0.15s ease,box-shadow 0.15s ease;}
+button:active{transform:scale(0.93);filter:brightness(1.1);}
+
+/* ②④ ライン消去フラッシュ */
+#fx-flash{
+  position:fixed;inset:0;z-index:140;pointer-events:none;opacity:0;
+  background:radial-gradient(ellipse at center,rgba(255,255,255,0.55),var(--fx-tint,rgba(0,245,255,0.18)) 45%,transparent 72%);
+  mix-blend-mode:screen;
+}
+#fx-flash.fire{animation:fxFlash 0.45s ease-out;}
+#fx-flash.strong.fire{animation:fxFlashStrong 0.7s ease-out;}
+@keyframes fxFlash{0%{opacity:0;}12%{opacity:0.85;}100%{opacity:0;}}
+@keyframes fxFlashStrong{0%{opacity:0;}10%{opacity:1;}38%{opacity:0.55;}100%{opacity:0;}}
+
+/* ③④ 大バナー（TETRIS！ / 酔いLv UP!） */
+#fx-banner{position:fixed;left:0;right:0;top:34%;z-index:155;pointer-events:none;text-align:center;display:none;}
+#fx-banner.show{display:block;}
+#fx-banner .fx-banner-text{
+  display:inline-block;font-weight:900;letter-spacing:0.05em;line-height:1;
+  font-size:clamp(38px,12.5vw,82px);
+  animation:fxBanner 1.15s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+#fx-banner .fx-banner-sub{display:block;font-size:0.26em;letter-spacing:0.3em;margin-top:0.3em;opacity:0.85;font-weight:700;}
+@keyframes fxBanner{0%{transform:scale(0.3) rotate(-3deg);opacity:0;}22%{transform:scale(1.18) rotate(1deg);opacity:1;}65%{transform:scale(1) rotate(0);opacity:1;}100%{transform:scale(1.45);opacity:0;}}
+
+/* ⑤ ゲームオーバー：金属シャッターが降りる */
+.gameover-overlay::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:0;z-index:0;
+  background:
+    repeating-linear-gradient(180deg,#23232a 0,#23232a 5px,#101015 5px,#101015 9px),
+    linear-gradient(90deg,rgba(255,255,255,0.08),transparent 30%,transparent 70%,rgba(255,255,255,0.08));
+  box-shadow:0 6px 24px rgba(0,0,0,0.85),inset 0 -3px 6px rgba(0,0,0,0.6);
+  animation:shutterDrop 0.75s cubic-bezier(0.5,0,0.7,0.4) forwards;
+}
+.gameover-overlay>*{position:relative;z-index:1;}
+@keyframes shutterDrop{0%{height:0;}100%{height:100%;}}
+.gameover-title{animation:goTitleIn 0.5s ease-out 0.55s both;}
+@keyframes goTitleIn{0%{transform:translateY(-12px) scale(0.8);opacity:0;}100%{transform:translateY(0) scale(1);opacity:1;}}
+
+/* ⑯⑰ ネオン／居酒屋グローのコク出し（軽いビネット＋床の暖色反射） */
+.fx-vignette{position:absolute;inset:0;pointer-events:none;z-index:3;
+  background:radial-gradient(ellipse at 50% 45%,transparent 62%,rgba(0,0,0,0.3) 100%);}
+.fx-warmfloor{position:absolute;left:0;right:0;bottom:0;height:26%;pointer-events:none;z-index:2;
+  background:linear-gradient(180deg,transparent,rgba(255,109,0,0.05) 60%,rgba(213,0,249,0.05));
+  mix-blend-mode:screen;}
 </style>
 </head>
 <body>
@@ -617,6 +684,8 @@ input{font-family:inherit;}
 <!-- TETRIS SCREEN -->
 <!-- ============================================================ -->
 <div id="screen-tetris" class="screen">
+  <div class="fx-warmfloor"></div>
+  <div class="fx-vignette"></div>
 
   <!-- ヘッダー -->
   <div class="t-header">
@@ -681,6 +750,8 @@ input{font-family:inherit;}
 <!-- IZAKAYA SCREEN -->
 <!-- ============================================================ -->
 <div id="screen-izakaya" class="screen">
+  <div class="fx-warmfloor"></div>
+  <div class="fx-vignette"></div>
 
   <!-- ヘッダー -->
   <div class="iz-header">
@@ -806,6 +877,10 @@ input{font-family:inherit;}
 
 <!-- トースト通知 -->
 <div id="toast"></div>
+
+<!-- 演出用：ライン消去フラッシュ／大バナー -->
+<div id="fx-flash"></div>
+<div id="fx-banner"></div>
 
 <script>
 // ============================================================
@@ -939,6 +1014,34 @@ const SFX=(function(){
 })();
 
 function playSfx(name){SFX.play(name);}
+
+// ============================================================
+// 演出エフェクト（フラッシュ／大バナー・既存ロジック非破壊の追加のみ）
+// ============================================================
+const FX=(function(){
+  function flash(tint,strong){
+    const f=document.getElementById('fx-flash');
+    if(!f)return;
+    f.style.setProperty('--fx-tint',tint||'rgba(0,245,255,0.2)');
+    f.classList.remove('fire','strong');
+    void f.offsetWidth; // reflow でアニメ再生
+    if(strong)f.classList.add('strong');
+    f.classList.add('fire');
+  }
+  function banner(main,sub,color){
+    const b=document.getElementById('fx-banner');
+    if(!b)return;
+    const shadow='0 0 18px '+color+',0 0 45px '+color;
+    b.innerHTML='<span class="fx-banner-text" style="color:'+color+';text-shadow:'+shadow+';">'+main+
+      (sub?'<span class="fx-banner-sub">'+sub+'</span>':'')+'</span>';
+    b.classList.remove('show');
+    void b.offsetWidth;
+    b.classList.add('show');
+    clearTimeout(window._fxBannerTimer);
+    window._fxBannerTimer=setTimeout(()=>{b.classList.remove('show');b.innerHTML='';},1200);
+  }
+  return {flash,banner};
+})();
 function toggleSound(){SFX.setEnabled(!SFX.isEnabled());updateSoundButtons();}
 function updateSoundButtons(){
   const on=SFX.isEnabled();
@@ -972,46 +1075,66 @@ const BGM=(function(){
     }
     return els[name];
   }
+  // 音量を滑らかにフェード（フェードアウト完了時は自動pause）
+  function fade(a,to,ms){
+    if(!a)return;
+    if(a._fadeTimer){clearInterval(a._fadeTimer);a._fadeTimer=null;}
+    const from=a.volume||0;
+    const steps=20, stepMs=Math.max(16,ms/steps); let i=0;
+    a._fadeTimer=setInterval(()=>{
+      i++;
+      let v=from+(to-from)*(i/steps);
+      v=Math.max(0,Math.min(1,v));
+      try{a.volume=v;}catch(e){}
+      if(i>=steps){clearInterval(a._fadeTimer);a._fadeTimer=null;if(to<=0){try{a.pause();}catch(e){}}}
+    },stepMs);
+  }
   function applyVolume(){
-    Object.keys(TRACK_IDS).forEach(name=>{const a=el(name);if(a)a.volume=volume;});
+    // スライダー操作などの即時反映（現在トラックのフェードは確定値で上書き）
+    const a=el(currentTrack);
+    if(a){if(a._fadeTimer){clearInterval(a._fadeTimer);a._fadeTimer=null;}a.volume=volume;}
   }
   function pauseOthers(except){
     Object.keys(TRACK_IDS).forEach(name=>{
-      if(name!==except){const a=el(name);if(a&&!a.paused)a.pause();}
+      // フェードアウト中のトラックはフェード側でpauseするので触らない
+      if(name!==except){const a=el(name);if(a&&!a.paused&&!a._fadeTimer)a.pause();}
     });
   }
-  // 現在のトラックの再生を試みる（成功/失敗をPromiseで返す）
+  // 現在のトラックの再生を試みる（成功/失敗をPromiseで返す・③フェードイン）
   function tryPlay(){
     const a=el(currentTrack);
     if(!a||!enabled)return Promise.resolve(false);
-    applyVolume();
     pauseOthers(currentTrack);
+    if(!a.paused){if(!a._fadeTimer)a.volume=volume;return Promise.resolve(true);}
     let p;
-    try{p=a.play();}catch(e){return Promise.resolve(false);}
-    if(p&&p.then)return p.then(()=>true).catch(()=>false);
-    return Promise.resolve(true);
+    try{a.volume=0;p=a.play();}catch(e){return Promise.resolve(false);}
+    const onOk=()=>{fade(a,volume,1000);return true;};
+    if(p&&p.then)return p.then(onOk).catch(()=>false);
+    return Promise.resolve(onOk());
   }
-  // テトリスモード/居酒屋モードの切り替え。切り替えた瞬間に再生も試みる
+  // テトリスモード/居酒屋モードの切り替え。切り替えた瞬間にクロスフェード
   function switchTrack(name){
     if(!TRACK_IDS[name])return;
     if(name!==currentTrack){
       const old=el(currentTrack);
-      if(old)old.pause();
+      if(old&&!old.paused)fade(old,0,700); // フェードアウト→自動pause
       currentTrack=name;
     }
     if(enabled)tryPlay();
   }
+  function stopAll(){
+    Object.keys(TRACK_IDS).forEach(name=>{const a=el(name);if(a){if(a._fadeTimer){clearInterval(a._fadeTimer);a._fadeTimer=null;}try{a.pause();}catch(e){}}});
+  }
   function setEnabled(v){
     enabled=v;
     try{localStorage.setItem('izakaya-bgm',v?'on':'off');}catch(e){}
-    if(v){tryPlay();}else{pauseOthers(null);}
+    if(v){tryPlay();}else{stopAll();}
   }
   function setVolume(v){
     volume=Math.min(1,Math.max(0,v));
     try{localStorage.setItem('izakaya-bgm-vol',String(volume));}catch(e){}
     applyVolume();
   }
-  function stopAll(){pauseOthers(null);}
   function isPlaying(){const a=el(currentTrack);return !!a&&!a.paused;}
   return {tryPlay,switchTrack,setEnabled,setVolume,stopAll,isEnabled:()=>enabled,getVolume:()=>volume,isPlaying};
 })();
@@ -1086,6 +1209,13 @@ function showScreen(id){
 let tBoard,tPiece,tNext,tScore,tLines,tLevel,tGameOver,tPaused;
 let dropTimer=null,dropInterval=800,bag=[];
 
+// 本家テトリス（NES版）と同じ落下速度カーブ：レベルが上がるほど加速し、高レベルでは一気に速くなる
+const NES_FRAME_TABLE=[48,43,38,33,28,23,18,13,8,6,5,5,4,4,4,3,3,3,2,2,2,2,2,2,2,2,2,2,2,1];
+function levelDropMs(level){
+  const frames=NES_FRAME_TABLE[Math.min(level,NES_FRAME_TABLE.length-1)];
+  return Math.round(frames/60*1000);
+}
+
 function nextBag(){if(!bag.length)bag=shuffle([...MINO_TYPES]);return bag.pop();}
 function newPiece(t){return{t,x:3,y:0,r:0};}
 
@@ -1133,7 +1263,7 @@ function startTetris(){
   resizeTetrisCanvas();
   tBoard=createBoard();tScore=0;tLines=0;tLevel=0;tGameOver=false;tPaused=false;bag=[];
   tPiece=newPiece(nextBag());tNext=newPiece(nextBag());
-  dropInterval=850;
+  dropInterval=levelDropMs(tLevel);
   document.getElementById('tetris-gameover').style.display='none';
   updateTetrisUI();drawTetris();
   scheduleDrop();
@@ -1166,9 +1296,21 @@ function lockPiece(){
     const pts=[0,100,300,500,800];
     tScore+=(pts[Math.min(cleared,4)]||0)*(tLevel+1);
     tLines+=cleared;tLevel=Math.floor(tLines/10);
-    dropInterval=Math.max(80,800-tLevel*80);
+    dropInterval=levelDropMs(tLevel);
     playSfx('lineclear');
-    if(tLevel>prevLevel)setTimeout(()=>playSfx('levelup'),260);
+    // ④ ライン消去の爽快フラッシュ・⑤ テトリス(4列)は特別演出
+    if(cleared>=4){
+      FX.flash('rgba(255,230,0,0.6)',true);
+      FX.banner('TETRIS！','４ライン同時消し',' #FFE600');
+    }else if(cleared>=2){
+      FX.flash('rgba(0,245,255,0.4)');
+    }else{
+      FX.flash('rgba(0,245,255,0.28)');
+    }
+    if(tLevel>prevLevel)setTimeout(()=>{
+      playSfx('levelup');
+      FX.banner('酔いLv '+tLevel,'LEVEL UP!',' #D500F9');
+    },cleared>=4?900:260);
   }
 
   // 次ピースを出す
@@ -1581,6 +1723,8 @@ function doPlace(mino,off){
   }
   if(clearedRows.length>0){
     playSfx('lineclear');
+    if(clearedRows.length>=4){FX.flash('rgba(255,230,0,0.6)',true);FX.banner('TETRIS！','４ライン同時消し',' #FFE600');}
+    else{FX.flash('rgba(213,0,249,0.35)');}
     showToast('🎉 '+clearedRows.length+'ライン消去！',2000);
   }
 
@@ -1646,6 +1790,10 @@ function drawCard(excluded){
 
   // 抽選音が止まった瞬間に決定音を鳴らす（当たり=テレレーン／ジョーカー=はずれ）
   playSfx(card==='JOKER'?'cardmiss':'cardwin');
+  // ⑥ カード決定の閃光（当たり=カード色／ジョーカー=赤）
+  if(card==='JOKER')FX.flash('rgba(255,45,85,0.45)',true);
+  else if(card==='ACE')FX.flash('rgba(255,230,0,0.5)',true);
+  else FX.flash((COLORS[card]||'#ffffff')+'aa',true);
 
   if(card==='JOKER'){
     izStats.joker++;izPhase='idle';
