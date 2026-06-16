@@ -592,7 +592,7 @@ input{font-family:inherit;}
         ">🎵 BGM ON</button>
         <div class="bgm-vol-row">
           <span style="font-size:11px;color:rgba(255,255,255,0.35);flex-shrink:0;">🔈</span>
-          <input id="bgm-volume" type="range" min="0" max="100" value="40" oninput="setBgmVolume(this.value)">
+          <input id="bgm-volume" type="range" min="0" max="100" value="15" oninput="setBgmVolume(this.value)">
           <span style="font-size:11px;color:rgba(255,255,255,0.35);flex-shrink:0;">🔊</span>
         </div>
       </div>
@@ -600,9 +600,12 @@ input{font-family:inherit;}
   </div>
 </div>
 
-<!-- BGM再生用オーディオ要素（assets/bgm/bgm.mp3 を配置すると自動で再生されます） -->
-<audio id="bgm-audio" loop preload="auto" playsinline webkit-playsinline>
-  <source src="assets/bgm/bgm.mp3" type="audio/mpeg">
+<!-- BGM再生用オーディオ要素（テトリスモード／居酒屋モードで自動切り替え） -->
+<audio id="bgm-tetris" loop preload="auto" playsinline webkit-playsinline>
+  <source src="assets/bgm/tetris.mp3" type="audio/mpeg">
+</audio>
+<audio id="bgm-izakaya" loop preload="auto" playsinline webkit-playsinline>
+  <source src="assets/bgm/izakaya.mp3" type="audio/mpeg">
 </audio>
 
 <!-- レッツゲリィオーバーレイ -->
@@ -895,6 +898,29 @@ const SFX=(function(){
     card(t){noise(t,0.13,0.10,'highpass',700,3500);tone(t+0.09,880,0.08,'sine',0.10);tone(t+0.17,1320,0.10,'sine',0.10);},
     // ⑦ ゲームオーバー：短めの残念な音（下降）
     gameover(t){[440,349,262].forEach((f,i)=>tone(t+i*0.16,f,0.32,'triangle',0.13,{attack:0.01}));},
+    // ⑧ カード抽選中：ガラガラ…と減速していくルーレット音
+    roulette(t){
+      let time=0, interval=0.032;
+      while(time<0.78){
+        // カチッというタッキング音（短いクリック）
+        tone(t+time,1100,0.018,'square',0.07,{attack:0.001});
+        time+=interval;
+        interval*=1.13; // 間隔を徐々に広げる＝減速していく
+      }
+    },
+    // ⑨ カード決定（当たり）：テレレーン！と気持ちいいファンファーレ
+    cardwin(t){
+      tone(t,      784,0.10,'triangle',0.15,{attack:0.003});  // テ
+      tone(t+0.10,1047,0.10,'triangle',0.15,{attack:0.003});  // レ
+      tone(t+0.20,1319,0.10,'triangle',0.15,{attack:0.003});  // レ
+      tone(t+0.30,1568,0.42,'triangle',0.16,{attack:0.004});  // レーン↑（のばし）
+      tone(t+0.30,2093,0.42,'sine',0.06,{attack:0.004});      // 倍音のキラッ
+    },
+    // ⑩ カード決定（ジョーカー＝はずれ）：短い残念音
+    cardmiss(t){
+      tone(t,     330,0.18,'square',0.10,{attack:0.004,glideTo:165});
+      tone(t+0.15,196,0.30,'square',0.10,{attack:0.004,glideTo:120});
+    },
   };
 
   function play(name){
@@ -924,49 +950,70 @@ document.addEventListener('DOMContentLoaded',updateSoundButtons);
 updateSoundButtons();
 
 // ============================================================
-// BGM（assets/bgm/bgm.mp3 を配置すると自動で再生対象になる）
+// BGM（テトリスモード／居酒屋モードでトラックを自動切り替え）
+// assets/bgm/tetris.mp3  … 通常テトリスモード用
+// assets/bgm/izakaya.mp3 … 居酒屋テトリスモード用
 // ============================================================
 const BGM=(function(){
-  let enabled=true, volume=0.4, audioEl=null, isPlaying=false;
+  let enabled=true, volume=0.15, currentTrack='tetris', els={};
   try{const v=localStorage.getItem('izakaya-bgm');if(v!==null)enabled=v!=='off';}catch(e){}
   try{const v=localStorage.getItem('izakaya-bgm-vol');if(v!==null)volume=Math.min(1,Math.max(0,parseFloat(v)));}catch(e){}
-  if(isNaN(volume))volume=0.4;
+  if(isNaN(volume))volume=0.15;
 
-  function el(){
-    if(!audioEl){
-      audioEl=document.getElementById('bgm-audio');
-      if(audioEl){
-        audioEl.addEventListener('playing',()=>{isPlaying=true;});
-        audioEl.addEventListener('pause',()=>{isPlaying=false;});
+  const TRACK_IDS={tetris:'bgm-tetris',izakaya:'bgm-izakaya'};
+  function el(name){
+    if(!els[name]){
+      const a=document.getElementById(TRACK_IDS[name]);
+      if(a){
         // エラー時は原因が分かるようにログを出す（ユーザー影響なし）
-        audioEl.addEventListener('error',()=>{console.warn('[BGM] 読み込みエラー: assets/bgm/bgm.mp3 を確認してください', audioEl.error);});
+        a.addEventListener('error',()=>{console.warn('[BGM] 読み込みエラー: assets/bgm/'+name+'.mp3 を確認してください', a.error);});
+        els[name]=a;
       }
     }
-    return audioEl;
+    return els[name];
   }
-  function apply(){const a=el();if(a)a.volume=volume;}
-  // 再生を試みる（成功/失敗をPromiseで返す）
+  function applyVolume(){
+    Object.keys(TRACK_IDS).forEach(name=>{const a=el(name);if(a)a.volume=volume;});
+  }
+  function pauseOthers(except){
+    Object.keys(TRACK_IDS).forEach(name=>{
+      if(name!==except){const a=el(name);if(a&&!a.paused)a.pause();}
+    });
+  }
+  // 現在のトラックの再生を試みる（成功/失敗をPromiseで返す）
   function tryPlay(){
-    const a=el();
+    const a=el(currentTrack);
     if(!a||!enabled)return Promise.resolve(false);
-    apply();
+    applyVolume();
+    pauseOthers(currentTrack);
     let p;
     try{p=a.play();}catch(e){return Promise.resolve(false);}
-    if(p&&p.then)return p.then(()=>{isPlaying=true;return true;}).catch(()=>false);
+    if(p&&p.then)return p.then(()=>true).catch(()=>false);
     return Promise.resolve(true);
+  }
+  // テトリスモード/居酒屋モードの切り替え。切り替えた瞬間に再生も試みる
+  function switchTrack(name){
+    if(!TRACK_IDS[name])return;
+    if(name!==currentTrack){
+      const old=el(currentTrack);
+      if(old)old.pause();
+      currentTrack=name;
+    }
+    if(enabled)tryPlay();
   }
   function setEnabled(v){
     enabled=v;
     try{localStorage.setItem('izakaya-bgm',v?'on':'off');}catch(e){}
-    const a=el();if(!a)return;
-    if(v){tryPlay();}else{a.pause();}
+    if(v){tryPlay();}else{pauseOthers(null);}
   }
   function setVolume(v){
     volume=Math.min(1,Math.max(0,v));
     try{localStorage.setItem('izakaya-bgm-vol',String(volume));}catch(e){}
-    apply();
+    applyVolume();
   }
-  return {tryPlay,setEnabled,setVolume,isEnabled:()=>enabled,getVolume:()=>volume,isPlaying:()=>isPlaying};
+  function stopAll(){pauseOthers(null);}
+  function isPlaying(){const a=el(currentTrack);return !!a&&!a.paused;}
+  return {tryPlay,switchTrack,setEnabled,setVolume,stopAll,isEnabled:()=>enabled,getVolume:()=>volume,isPlaying};
 })();
 
 function toggleBgm(){BGM.setEnabled(!BGM.isEnabled());updateBgmButtons();}
@@ -982,7 +1029,7 @@ function updateBgmButtons(){
 function initBgmUI(){
   updateBgmButtons();
   // ユーザー操作のたびに、実際に再生が始まるまで再生を試み続ける
-  // （スマホの自動再生制限対策。1回で失敗しても次のタップで再試行する）
+  // （スマホの自動再生制限対策・ページ読み込み直後の自動再生はしない。1回失敗しても次のタップで再試行する）
   const events=['pointerdown','touchend','click','keydown'];
   const unlock=()=>{
     if(!BGM.isEnabled()||BGM.isPlaying()){detach();return;}
@@ -1081,6 +1128,7 @@ function showLetsGo(){
 }
 
 function startTetris(){
+  if(typeof BGM!=='undefined')BGM.switchTrack('tetris');
   showScreen('tetris');
   resizeTetrisCanvas();
   tBoard=createBoard();tScore=0;tLines=0;tLevel=0;tGameOver=false;tPaused=false;bag=[];
@@ -1312,6 +1360,7 @@ function startIzakaya(board){
   izDeck={remaining:shuffle([...ALL_CARDS]),drawn:[],cycle:0};
   izStats={food:0,drink:0,mino:0,joker:0,ace:0,start:Date.now(),end:null,foodItems:[],drinkItems:[]};
   izPhase='idle';izCurrentCard=null;izSelectedMino=null;izRotation=0;
+  if(typeof BGM!=='undefined')BGM.switchTrack('izakaya');
   saveGame();showScreen('izakaya');renderIzakaya();
 }
 
@@ -1322,6 +1371,7 @@ function loadSave(){
   izDeck=d.deck||{remaining:shuffle([...ALL_CARDS]),drawn:[],cycle:0};
   izStats=d.stats||{food:0,drink:0,mino:0,joker:0,ace:0,start:Date.now(),end:null,foodItems:[],drinkItems:[]};
   izPhase='idle';izCurrentCard=null;izSelectedMino=null;izRotation=0;
+  if(typeof BGM!=='undefined')BGM.switchTrack('izakaya');
   showScreen('izakaya');renderIzakaya();
 }
 
@@ -1586,7 +1636,6 @@ function drawCard(excluded){
   if(izStock<cost)return;
   izStock-=cost;
   izDeck.cycle++;
-  playSfx('card');
 
   // 全10枚のうち除外カードを除いたプールから抽選
   const pool=ALL_CARDS.filter(c=>c==='ACE'||c==='JOKER'||!excluded.includes(c));
@@ -1594,6 +1643,9 @@ function drawCard(excluded){
   const idx=Math.floor(Math.random()*src.length);
   const card=src[idx];
   izCurrentCard=card;izRotation=0;
+
+  // 抽選音が止まった瞬間に決定音を鳴らす（当たり=テレレーン／ジョーカー=はずれ）
+  playSfx(card==='JOKER'?'cardmiss':'cardwin');
 
   if(card==='JOKER'){
     izStats.joker++;izPhase='idle';
@@ -1621,6 +1673,49 @@ function drawCard(excluded){
       }
     },2300);
   }
+}
+
+// ============================================================
+// カード抽選中の高速切り替えビジュアル（ガラガラ→減速、音と同じタイミング）
+// ============================================================
+let _cardSpinTimer=null;
+const SPIN_POOL=[...MINO_TYPES,'ACE','JOKER'];
+function renderSpinFace(key){
+  const coCard=document.getElementById('co-card');
+  const coLabel=document.getElementById('co-label');
+  coLabel.textContent='抽選中…';
+  if(key==='JOKER'){
+    coCard.style.cssText='width:168px;height:224px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#1a0010,#050010);border:3px solid var(--neon-red);box-shadow:0 0 20px var(--neon-red);';
+    coCard.innerHTML='<div style="font-size:72px;line-height:1;">🃏</div>';
+  }else if(key==='ACE'){
+    coCard.style.cssText='width:168px;height:224px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#1a1400,#050010);border:3px solid var(--neon-yellow);box-shadow:0 0 20px var(--neon-yellow);';
+    coCard.innerHTML='<div style="font-size:72px;line-height:1;">🂡</div>';
+  }else{
+    const minoColor=COLORS[key]||'#fff';
+    coCard.style.cssText='width:168px;height:224px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#050018,#010008);border:3px solid '+minoColor+';box-shadow:0 0 20px '+minoColor+'88;';
+    coCard.innerHTML='<div style="font-size:54px;font-weight:900;color:'+minoColor+';text-shadow:0 0 14px '+minoColor+';">'+key+'</div>';
+  }
+}
+function startCardSpin(){
+  stopCardSpin();
+  const ov=document.getElementById('card-overlay');
+  const inner=document.getElementById('card-overlay-inner');
+  const coSub=document.getElementById('co-sub');
+  inner.classList.remove('card-fadeout','card-pop');
+  coSub.innerHTML='<span style="color:rgba(255,255,255,0.55);font-size:14px;">ガラガラガラ…</span>';
+  ov.style.display='flex';
+  ov.style.pointerEvents='none';
+  ov.onclick=null;
+  let time=0, interval=0.032; // playSfx('roulette')と同じ減速カーブ
+  (function tick(){
+    renderSpinFace(SPIN_POOL[Math.floor(Math.random()*SPIN_POOL.length)]);
+    time+=interval;
+    interval*=1.13;
+    if(time<0.78)_cardSpinTimer=setTimeout(tick,interval*1000);
+  })();
+}
+function stopCardSpin(){
+  if(_cardSpinTimer){clearTimeout(_cardSpinTimer);_cardSpinTimer=null;}
 }
 
 function showCardDisplay(icon,text,isJoker,autoHideMs){
@@ -1970,7 +2065,13 @@ function showLetsGoThenDraw(excluded){
   txt.style.animation='none';
   void txt.offsetWidth;
   txt.style.animation='letsgoPop 0.9s cubic-bezier(0.22,1,0.36,1) forwards';
-  setTimeout(()=>{ov.style.display='none';drawCard(excluded);},800);
+  playSfx('roulette'); // 抽選中：ガラガラ→減速
+  startCardSpin(); // カードが高速で切り替わるビジュアル
+  setTimeout(()=>{
+    ov.style.display='none';
+    stopCardSpin();
+    drawCard(excluded);
+  },800);
 }
 
 function showResetModal(){
