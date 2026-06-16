@@ -441,7 +441,8 @@ input{font-family:inherit;}
   background:rgba(0,0,0,0);pointer-events:none;
 }
 .letsgo-text{
-  font-size:64px;font-weight:900;letter-spacing:0.05em;
+  font-size:clamp(34px,11vw,64px);font-weight:900;letter-spacing:0.02em;
+  white-space:nowrap;max-width:96vw;
   color:var(--neon-yellow);
   text-shadow:0 0 20px var(--neon-yellow),0 0 50px var(--neon-orange),0 0 80px var(--neon-red);
   animation:letsgoPop 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
@@ -995,6 +996,18 @@ const SFX=(function(){
     cardmiss(t){
       tone(t,     330,0.18,'square',0.15,{attack:0.004,glideTo:165});
       tone(t+0.15,196,0.30,'square',0.15,{attack:0.004,glideTo:120});
+    },
+    // ⑪ 食った！：パクッと弾むポップ音
+    eat(t){
+      tone(t,330,0.07,'square',0.16,{glideTo:520,attack:0.002});
+      tone(t+0.07,660,0.10,'triangle',0.16,{glideTo:880,attack:0.002});
+      noise(t,0.05,0.06,'bandpass',1200,600);
+    },
+    // ⑫ 飲んだ！：ゴクッ→プハー的な爽快音
+    drink(t){
+      tone(t,200,0.12,'sine',0.16,{glideTo:120,attack:0.003});      // ゴクッ
+      tone(t+0.12,500,0.10,'triangle',0.14,{glideTo:760,attack:0.003}); // 爽快な抜け
+      tone(t+0.22,880,0.14,'sine',0.10,{glideTo:1100,attack:0.004});    // プハー↑
     },
   };
 
@@ -1958,6 +1971,7 @@ function addStock(type,name){
     if(type==='food')izStats.foodItems.push(name);else izStats.drinkItems.push(name);
   }
   if(!izStats.start)izStats.start=Date.now();
+  playSfx(type==='food'?'eat':'drink');
   saveGame();updateStockUI();updateHistoryUI();updateDrawButtons();updateStatsUI();
   showToast(type==='food'?'🍢 ストック+1！':'🍺 ストック+1！',1500);
 }
