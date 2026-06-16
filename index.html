@@ -577,7 +577,7 @@ input{font-family:inherit;}
 </div>
 
 <!-- BGM再生用オーディオ要素（assets/bgm/bgm.mp3 を配置すると自動で再生されます） -->
-<audio id="bgm-audio" loop preload="none">
+<audio id="bgm-audio" loop preload="auto" playsinline webkit-playsinline>
   <source src="assets/bgm/bgm.mp3" type="audio/mpeg">
 </audio>
 
@@ -903,42 +903,46 @@ updateSoundButtons();
 // BGM（assets/bgm/bgm.mp3 を配置すると自動で再生対象になる）
 // ============================================================
 const BGM=(function(){
-  let enabled=true, volume=0.4, started=false, audioEl=null;
+  let enabled=true, volume=0.4, audioEl=null, isPlaying=false;
   try{const v=localStorage.getItem('izakaya-bgm');if(v!==null)enabled=v!=='off';}catch(e){}
   try{const v=localStorage.getItem('izakaya-bgm-vol');if(v!==null)volume=Math.min(1,Math.max(0,parseFloat(v)));}catch(e){}
   if(isNaN(volume))volume=0.4;
 
   function el(){
-    if(!audioEl)audioEl=document.getElementById('bgm-audio');
+    if(!audioEl){
+      audioEl=document.getElementById('bgm-audio');
+      if(audioEl){
+        audioEl.addEventListener('playing',()=>{isPlaying=true;});
+        audioEl.addEventListener('pause',()=>{isPlaying=false;});
+        // エラー時は原因が分かるようにログを出す（ユーザー影響なし）
+        audioEl.addEventListener('error',()=>{console.warn('[BGM] 読み込みエラー: assets/bgm/bgm.mp3 を確認してください', audioEl.error);});
+      }
+    }
     return audioEl;
   }
-  function apply(){
-    const a=el();if(!a)return;
-    a.volume=volume;
-  }
+  function apply(){const a=el();if(a)a.volume=volume;}
+  // 再生を試みる（成功/失敗をPromiseで返す）
   function tryPlay(){
-    const a=el();if(!a||!enabled)return;
+    const a=el();
+    if(!a||!enabled)return Promise.resolve(false);
     apply();
-    const p=a.play();
-    if(p&&p.catch)p.catch(()=>{}); // mp3未配置・自動再生制限などは無視
-  }
-  function start(){
-    // 最初のユーザー操作で1回だけ再生を試みる（ブラウザの自動再生制限対策）
-    started=true;
-    if(enabled)tryPlay();
+    let p;
+    try{p=a.play();}catch(e){return Promise.resolve(false);}
+    if(p&&p.then)return p.then(()=>{isPlaying=true;return true;}).catch(()=>false);
+    return Promise.resolve(true);
   }
   function setEnabled(v){
     enabled=v;
     try{localStorage.setItem('izakaya-bgm',v?'on':'off');}catch(e){}
     const a=el();if(!a)return;
-    if(v){if(started)tryPlay();}else{a.pause();}
+    if(v){tryPlay();}else{a.pause();}
   }
   function setVolume(v){
     volume=Math.min(1,Math.max(0,v));
     try{localStorage.setItem('izakaya-bgm-vol',String(volume));}catch(e){}
     apply();
   }
-  return {start,setEnabled,setVolume,isEnabled:()=>enabled,getVolume:()=>volume};
+  return {tryPlay,setEnabled,setVolume,isEnabled:()=>enabled,getVolume:()=>volume,isPlaying:()=>isPlaying};
 })();
 
 function toggleBgm(){BGM.setEnabled(!BGM.isEnabled());updateBgmButtons();}
@@ -953,13 +957,18 @@ function updateBgmButtons(){
 }
 function initBgmUI(){
   updateBgmButtons();
-  // 最初のユーザー操作（タップ/クリック/キー）でBGM再生を試みる（自動再生制限対策）
-  const unlock=()=>{BGM.start();document.removeEventListener('pointerdown',unlock);document.removeEventListener('keydown',unlock);};
-  document.addEventListener('pointerdown',unlock,{once:true});
-  document.addEventListener('keydown',unlock,{once:true});
+  // ユーザー操作のたびに、実際に再生が始まるまで再生を試み続ける
+  // （スマホの自動再生制限対策。1回で失敗しても次のタップで再試行する）
+  const events=['pointerdown','touchend','click','keydown'];
+  const unlock=()=>{
+    if(!BGM.isEnabled()||BGM.isPlaying()){detach();return;}
+    BGM.tryPlay().then(ok=>{ if(ok)detach(); });
+  };
+  function detach(){events.forEach(ev=>document.removeEventListener(ev,unlock,true));}
+  events.forEach(ev=>document.addEventListener(ev,unlock,true));
 }
-document.addEventListener('DOMContentLoaded',initBgmUI);
-initBgmUI();
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initBgmUI);
+else initBgmUI();
 
 // ============================================================
 // ユーティリティ
