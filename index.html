@@ -840,7 +840,7 @@ const SFX=(function(){
       if(!AC)return null;
       ctx=new AC();
       masterGain=ctx.createGain();
-      masterGain.gain.value=0.22; // 全体音量小さめ
+      masterGain.gain.value=0.34; // 全体音量
       masterGain.connect(ctx.destination);
     }catch(e){ctx=null;}
     return ctx;
@@ -891,7 +891,7 @@ const SFX=(function(){
     // ③ ハードドロップ：シュッという落下音
     harddrop(t){noise(t,0.18,0.16,'lowpass',2000,120);tone(t+0.02,220,0.12,'sine',0.10,{glideTo:60});},
     // ④ ライン消去：爽快感のある消去音（上昇アルペジオ）
-    lineclear(t){[523,659,784,1047].forEach((f,i)=>tone(t+i*0.06,f,0.18,'triangle',0.13,{attack:0.004}));},
+    lineclear(t){[523,659,784,1047].forEach((f,i)=>tone(t+i*0.06,f,0.18,'triangle',0.22,{attack:0.004}));},
     // ⑤ レベルアップ：達成感のある短いファンファーレ
     levelup(t){[392,523,659,784].forEach((f,i)=>tone(t+i*0.09,f,0.20,'triangle',0.14));tone(t+0.27,784,0.30,'triangle',0.14);},
     // ⑥ カード使用：カードを引くような音（スワイプ＋キラッ）
@@ -903,23 +903,23 @@ const SFX=(function(){
       let time=0, interval=0.032;
       while(time<0.78){
         // カチッというタッキング音（短いクリック）
-        tone(t+time,1100,0.018,'square',0.07,{attack:0.001});
+        tone(t+time,1100,0.018,'square',0.11,{attack:0.001});
         time+=interval;
         interval*=1.13; // 間隔を徐々に広げる＝減速していく
       }
     },
     // ⑨ カード決定（当たり）：テレレーン！と気持ちいいファンファーレ
     cardwin(t){
-      tone(t,      784,0.10,'triangle',0.15,{attack:0.003});  // テ
-      tone(t+0.10,1047,0.10,'triangle',0.15,{attack:0.003});  // レ
-      tone(t+0.20,1319,0.10,'triangle',0.15,{attack:0.003});  // レ
-      tone(t+0.30,1568,0.42,'triangle',0.16,{attack:0.004});  // レーン↑（のばし）
-      tone(t+0.30,2093,0.42,'sine',0.06,{attack:0.004});      // 倍音のキラッ
+      tone(t,      784,0.10,'triangle',0.22,{attack:0.003});  // テ
+      tone(t+0.10,1047,0.10,'triangle',0.22,{attack:0.003});  // レ
+      tone(t+0.20,1319,0.10,'triangle',0.22,{attack:0.003});  // レ
+      tone(t+0.30,1568,0.42,'triangle',0.24,{attack:0.004});  // レーン↑（のばし）
+      tone(t+0.30,2093,0.42,'sine',0.10,{attack:0.004});      // 倍音のキラッ
     },
     // ⑩ カード決定（ジョーカー＝はずれ）：短い残念音
     cardmiss(t){
-      tone(t,     330,0.18,'square',0.10,{attack:0.004,glideTo:165});
-      tone(t+0.15,196,0.30,'square',0.10,{attack:0.004,glideTo:120});
+      tone(t,     330,0.18,'square',0.15,{attack:0.004,glideTo:165});
+      tone(t+0.15,196,0.30,'square',0.15,{attack:0.004,glideTo:120});
     },
   };
 
