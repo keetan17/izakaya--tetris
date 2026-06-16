@@ -427,6 +427,35 @@ input{font-family:inherit;}
 .flicker{animation:neonFlicker 4s infinite;}
 .flicker-pink{animation:neonFlickerPink 3s infinite;}
 @keyframes dekkinPop{0%{transform:scale(0.3) rotate(-12deg);opacity:0;}40%{transform:scale(1.2) rotate(3deg);opacity:1;}65%{transform:scale(0.95) rotate(-1deg);}80%{transform:scale(1.1);opacity:1;}100%{transform:scale(2);opacity:0;}}
+
+/* ─── SOUND TOGGLE ─── */
+.sound-toggle{
+  width:30px;height:30px;border-radius:8px;flex-shrink:0;line-height:1;
+  border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);
+  color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;
+}
+.sound-toggle:active{transform:scale(0.9);}
+
+/* ─── BGM CONTROLS ─── */
+.bgm-toggle{
+  width:30px;height:30px;border-radius:8px;flex-shrink:0;line-height:1;
+  border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);
+  color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;
+}
+.bgm-toggle:active{transform:scale(0.9);}
+.bgm-vol-row{display:flex;align-items:center;gap:8px;width:100%;}
+.bgm-vol-row input[type="range"]{
+  flex:1;height:4px;-webkit-appearance:none;appearance:none;
+  background:rgba(255,255,255,0.15);border-radius:2px;outline:none;
+}
+.bgm-vol-row input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+  background:var(--neon-cyan);box-shadow:0 0 6px var(--neon-cyan);cursor:pointer;
+}
+.bgm-vol-row input[type="range"]::-moz-range-thumb{
+  width:16px;height:16px;border-radius:50%;border:none;
+  background:var(--neon-cyan);box-shadow:0 0 6px var(--neon-cyan);cursor:pointer;
+}
 </style>
 </head>
 <body>
@@ -519,9 +548,38 @@ input{font-family:inherit;}
         border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.04);
         color:rgba(255,255,255,0.55);
       ">ルールを見る</button>
+
+      <!-- 効果音 ON/OFF -->
+      <button id="btn-sound-toggle" onclick="toggleSound()" style="
+        padding:11px;border-radius:8px;font-size:13px;font-weight:700;letter-spacing:0.06em;
+        border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.03);
+        color:rgba(255,255,255,0.5);
+      ">🔊 効果音 ON</button>
+
+      <!-- BGM ON/OFF + 音量 -->
+      <div style="
+        padding:10px 12px;border-radius:8px;
+        border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.03);
+        display:flex;flex-direction:column;gap:8px;
+      ">
+        <button id="btn-bgm-toggle" onclick="toggleBgm()" style="
+          width:100%;background:transparent;border:none;padding:0;
+          font-size:13px;font-weight:700;letter-spacing:0.06em;color:rgba(255,255,255,0.5);
+        ">🎵 BGM ON</button>
+        <div class="bgm-vol-row">
+          <span style="font-size:11px;color:rgba(255,255,255,0.35);flex-shrink:0;">🔈</span>
+          <input id="bgm-volume" type="range" min="0" max="100" value="40" oninput="setBgmVolume(this.value)">
+          <span style="font-size:11px;color:rgba(255,255,255,0.35);flex-shrink:0;">🔊</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+<!-- BGM再生用オーディオ要素（assets/bgm/bgm.mp3 を配置すると自動で再生されます） -->
+<audio id="bgm-audio" loop preload="none">
+  <source src="assets/bgm/bgm.mp3" type="audio/mpeg">
+</audio>
 
 <!-- レッツゲリィオーバーレイ -->
 <div id="letsgo-overlay">
@@ -535,7 +593,11 @@ input{font-family:inherit;}
 
   <!-- ヘッダー -->
   <div class="t-header">
-    <div style="font-size:13px;font-weight:900;letter-spacing:0.06em;" class="t-neon-red">🎰 酒場テトリス</div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <button class="sound-toggle" onclick="toggleSound()" title="効果音 ON/OFF">🔊</button>
+      <button class="bgm-toggle" onclick="toggleBgm()" title="BGM ON/OFF">🎵</button>
+      <div style="font-size:13px;font-weight:900;letter-spacing:0.06em;" class="t-neon-red">🎰 酒場テトリス</div>
+    </div>
     <div style="display:flex;gap:6px;">
       <div class="score-tag"><div class="val" id="t-score">0</div><div class="lbl">おあいそ</div></div>
       <div class="score-tag"><div class="val" id="t-lines">0</div><div class="lbl">ライン</div></div>
@@ -602,6 +664,8 @@ input{font-family:inherit;}
         <span id="stock-num" class="stock-num">0</span>
         <div id="stock-dots" class="stock-dots"></div>
       </div>
+      <button class="sound-toggle" onclick="toggleSound()" title="効果音 ON/OFF">🔊</button>
+      <button class="bgm-toggle" onclick="toggleBgm()" title="BGM ON/OFF">🎵</button>
       <button onclick="showResetModal()" style="padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:transparent;color:rgba(255,255,255,0.4);font-size:12px;">⚙️</button>
     </div>
   </div>
@@ -736,6 +800,168 @@ const SHAPES={
 const ALL_CARDS=['I','O','T','S','Z','J','L','ACE','ACE','JOKER'];
 
 // ============================================================
+// 効果音エンジン（Web Audio API・外部音源なし・音量小さめ）
+// ============================================================
+const SFX=(function(){
+  let ctx=null, masterGain=null, enabled=true;
+  try{enabled=localStorage.getItem('izakaya-sfx')!=='off';}catch(e){}
+
+  function init(){
+    if(ctx)return ctx;
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC)return null;
+      ctx=new AC();
+      masterGain=ctx.createGain();
+      masterGain.gain.value=0.22; // 全体音量小さめ
+      masterGain.connect(ctx.destination);
+    }catch(e){ctx=null;}
+    return ctx;
+  }
+  function resume(){if(ctx&&ctx.state==='suspended'){try{ctx.resume();}catch(e){}}}
+
+  // 単音（オシレーター＋エンベロープ）
+  function tone(t0,freq,dur,type,vol,opt){
+    opt=opt||{};
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type=type||'sine';
+    o.frequency.setValueAtTime(freq,t0);
+    if(opt.glideTo)o.frequency.exponentialRampToValueAtTime(Math.max(1,opt.glideTo),t0+dur);
+    const a=opt.attack!=null?opt.attack:0.005;
+    g.gain.setValueAtTime(0.0001,t0);
+    g.gain.exponentialRampToValueAtTime(vol,t0+a);
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    o.connect(g);g.connect(masterGain);
+    o.start(t0);o.stop(t0+dur+0.02);
+  }
+  // ノイズ（ハードドロップ・カードのスワイプ用）
+  function noise(t0,dur,vol,filterType,fStart,fEnd){
+    const len=Math.max(1,Math.floor(ctx.sampleRate*dur));
+    const buf=ctx.createBuffer(1,len,ctx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
+    const src=ctx.createBufferSource();src.buffer=buf;
+    const g=ctx.createGain();
+    g.gain.setValueAtTime(vol,t0);
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    if(filterType){
+      const f=ctx.createBiquadFilter();
+      f.type=filterType;
+      f.frequency.setValueAtTime(fStart,t0);
+      if(fEnd)f.frequency.exponentialRampToValueAtTime(Math.max(40,fEnd),t0+dur);
+      src.connect(f);f.connect(g);
+    }else{src.connect(g);}
+    g.connect(masterGain);
+    src.start(t0);src.stop(t0+dur+0.02);
+  }
+
+  // 各効果音の定義
+  const sounds={
+    // ① ミノ移動：軽いカチッ音
+    move(t){tone(t,640,0.03,'square',0.09,{attack:0.001});},
+    // ② ミノ回転：テトリス風の電子音
+    rotate(t){tone(t,330,0.09,'square',0.12,{glideTo:680,attack:0.001});},
+    // ③ ハードドロップ：シュッという落下音
+    harddrop(t){noise(t,0.18,0.16,'lowpass',2000,120);tone(t+0.02,220,0.12,'sine',0.10,{glideTo:60});},
+    // ④ ライン消去：爽快感のある消去音（上昇アルペジオ）
+    lineclear(t){[523,659,784,1047].forEach((f,i)=>tone(t+i*0.06,f,0.18,'triangle',0.13,{attack:0.004}));},
+    // ⑤ レベルアップ：達成感のある短いファンファーレ
+    levelup(t){[392,523,659,784].forEach((f,i)=>tone(t+i*0.09,f,0.20,'triangle',0.14));tone(t+0.27,784,0.30,'triangle',0.14);},
+    // ⑥ カード使用：カードを引くような音（スワイプ＋キラッ）
+    card(t){noise(t,0.13,0.10,'highpass',700,3500);tone(t+0.09,880,0.08,'sine',0.10);tone(t+0.17,1320,0.10,'sine',0.10);},
+    // ⑦ ゲームオーバー：短めの残念な音（下降）
+    gameover(t){[440,349,262].forEach((f,i)=>tone(t+i*0.16,f,0.32,'triangle',0.13,{attack:0.01}));},
+  };
+
+  function play(name){
+    if(!enabled)return;
+    if(!init())return;
+    resume();
+    const fn=sounds[name];if(!fn)return;
+    try{fn(ctx.currentTime+0.001);}catch(e){}
+  }
+  function setEnabled(v){
+    enabled=v;
+    try{localStorage.setItem('izakaya-sfx',v?'on':'off');}catch(e){}
+    if(v){if(init())resume();play('move');}
+  }
+  return {play,setEnabled,isEnabled:()=>enabled};
+})();
+
+function playSfx(name){SFX.play(name);}
+function toggleSound(){SFX.setEnabled(!SFX.isEnabled());updateSoundButtons();}
+function updateSoundButtons(){
+  const on=SFX.isEnabled();
+  document.querySelectorAll('.sound-toggle').forEach(b=>{b.textContent=on?'🔊':'🔇';b.style.opacity=on?'1':'0.5';});
+  const sb=document.getElementById('btn-sound-toggle');
+  if(sb){sb.textContent=on?'🔊 効果音 ON':'🔇 効果音 OFF';sb.style.color=on?'rgba(255,255,255,0.5)':'rgba(255,255,255,0.3)';}
+}
+document.addEventListener('DOMContentLoaded',updateSoundButtons);
+updateSoundButtons();
+
+// ============================================================
+// BGM（assets/bgm/bgm.mp3 を配置すると自動で再生対象になる）
+// ============================================================
+const BGM=(function(){
+  let enabled=true, volume=0.4, started=false, audioEl=null;
+  try{const v=localStorage.getItem('izakaya-bgm');if(v!==null)enabled=v!=='off';}catch(e){}
+  try{const v=localStorage.getItem('izakaya-bgm-vol');if(v!==null)volume=Math.min(1,Math.max(0,parseFloat(v)));}catch(e){}
+  if(isNaN(volume))volume=0.4;
+
+  function el(){
+    if(!audioEl)audioEl=document.getElementById('bgm-audio');
+    return audioEl;
+  }
+  function apply(){
+    const a=el();if(!a)return;
+    a.volume=volume;
+  }
+  function tryPlay(){
+    const a=el();if(!a||!enabled)return;
+    apply();
+    const p=a.play();
+    if(p&&p.catch)p.catch(()=>{}); // mp3未配置・自動再生制限などは無視
+  }
+  function start(){
+    // 最初のユーザー操作で1回だけ再生を試みる（ブラウザの自動再生制限対策）
+    started=true;
+    if(enabled)tryPlay();
+  }
+  function setEnabled(v){
+    enabled=v;
+    try{localStorage.setItem('izakaya-bgm',v?'on':'off');}catch(e){}
+    const a=el();if(!a)return;
+    if(v){if(started)tryPlay();}else{a.pause();}
+  }
+  function setVolume(v){
+    volume=Math.min(1,Math.max(0,v));
+    try{localStorage.setItem('izakaya-bgm-vol',String(volume));}catch(e){}
+    apply();
+  }
+  return {start,setEnabled,setVolume,isEnabled:()=>enabled,getVolume:()=>volume};
+})();
+
+function toggleBgm(){BGM.setEnabled(!BGM.isEnabled());updateBgmButtons();}
+function setBgmVolume(v){BGM.setVolume(Number(v)/100);}
+function updateBgmButtons(){
+  const on=BGM.isEnabled();
+  document.querySelectorAll('.bgm-toggle').forEach(b=>{b.style.opacity=on?'1':'0.5';});
+  const bb=document.getElementById('btn-bgm-toggle');
+  if(bb){bb.textContent=on?'🎵 BGM ON':'🔇 BGM OFF';bb.style.color=on?'rgba(255,255,255,0.5)':'rgba(255,255,255,0.3)';}
+  const slider=document.getElementById('bgm-volume');
+  if(slider)slider.value=Math.round(BGM.getVolume()*100);
+}
+function initBgmUI(){
+  updateBgmButtons();
+  // 最初のユーザー操作（タップ/クリック/キー）でBGM再生を試みる（自動再生制限対策）
+  const unlock=()=>{BGM.start();document.removeEventListener('pointerdown',unlock);document.removeEventListener('keydown',unlock);};
+  document.addEventListener('pointerdown',unlock,{once:true});
+  document.addEventListener('keydown',unlock,{once:true});
+}
+document.addEventListener('DOMContentLoaded',initBgmUI);
+initBgmUI();
+
+// ============================================================
 // ユーティリティ
 // ============================================================
 function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
@@ -855,10 +1081,13 @@ function lockPiece(){
     else y--;
   }
   if(cleared){
+    const prevLevel=tLevel;
     const pts=[0,100,300,500,800];
     tScore+=(pts[Math.min(cleared,4)]||0)*(tLevel+1);
     tLines+=cleared;tLevel=Math.floor(tLines/10);
     dropInterval=Math.max(80,800-tLevel*80);
+    playSfx('lineclear');
+    if(tLevel>prevLevel)setTimeout(()=>playSfx('levelup'),260);
   }
 
   // 次ピースを出す
@@ -869,6 +1098,7 @@ function lockPiece(){
 
 function triggerGameOver(){
   tGameOver=true;clearTimeout(dropTimer);
+  playSfx('gameover');
   const go=document.getElementById('tetris-gameover');
   go.style.display='flex';
   document.getElementById('go-score').textContent='スコア: '+tScore.toLocaleString();
@@ -880,12 +1110,13 @@ function movePieceDown(){
   const moved={...tPiece,y:tPiece.y+1};
   if(tValid(tBoard,moved)){tPiece=moved;drawTetris();}else lockPiece();
 }
-function onLeft(){if(!tGameOver&&!tPaused){const m={...tPiece,x:tPiece.x-1};if(tValid(tBoard,m)){tPiece=m;drawTetris();}}}
-function onRight(){if(!tGameOver&&!tPaused){const m={...tPiece,x:tPiece.x+1};if(tValid(tBoard,m)){tPiece=m;drawTetris();}}}
-function onSoftDrop(){if(!tGameOver&&!tPaused){const m={...tPiece,y:tPiece.y+1};if(tValid(tBoard,m)){tPiece=m;tScore++;drawTetris();}else lockPiece();}}
+function onLeft(){if(!tGameOver&&!tPaused){const m={...tPiece,x:tPiece.x-1};if(tValid(tBoard,m)){tPiece=m;playSfx('move');drawTetris();}}}
+function onRight(){if(!tGameOver&&!tPaused){const m={...tPiece,x:tPiece.x+1};if(tValid(tBoard,m)){tPiece=m;playSfx('move');drawTetris();}}}
+function onSoftDrop(){if(!tGameOver&&!tPaused){const m={...tPiece,y:tPiece.y+1};if(tValid(tBoard,m)){tPiece=m;tScore++;playSfx('move');drawTetris();}else lockPiece();}}
 function onHardDrop(){
   if(tGameOver||tPaused)return;
   clearTimeout(dropTimer);
+  playSfx('harddrop');
   const g=tGhost();tPiece=g;lockPiece();scheduleDrop();
 }
 function onRotate(){
@@ -894,7 +1125,7 @@ function onRotate(){
   const kicks=[[0,0],[-1,0],[1,0],[0,-1],[-1,-1],[1,-1],[2,0],[-2,0]];
   for(const [dx,dy] of kicks){
     const m={...tPiece,r:nr,x:tPiece.x+dx,y:tPiece.y+dy};
-    if(tValid(tBoard,m)){tPiece=m;drawTetris();return;}
+    if(tValid(tBoard,m)){tPiece=m;playSfx('rotate');drawTetris();return;}
   }
 }
 function updateTetrisUI(){
@@ -1266,6 +1497,7 @@ function doPlace(mino,off){
     }
   }
   if(clearedRows.length>0){
+    playSfx('lineclear');
     showToast('🎉 '+clearedRows.length+'ライン消去！',2000);
   }
 
@@ -1284,7 +1516,7 @@ function doClear(){
 
 function izRotate(){
   const am=izActiveMino();if(!am||izPhase!=='placing')return;
-  izRotation=(izRotation+1)%4;drawIzakaya();
+  izRotation=(izRotation+1)%4;playSfx('rotate');drawIzakaya();
 }
 
 // タイマー
@@ -1321,6 +1553,7 @@ function drawCard(excluded){
   if(izStock<cost)return;
   izStock-=cost;
   izDeck.cycle++;
+  playSfx('card');
 
   // 全10枚のうち除外カードを除いたプールから抽選
   const pool=ALL_CARDS.filter(c=>c==='ACE'||c==='JOKER'||!excluded.includes(c));
